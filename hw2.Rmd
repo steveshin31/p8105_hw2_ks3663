@@ -1,0 +1,14 @@
+---
+title: "hw2"
+author: "Kee-Young Shin"
+date: "September 29, 2018"
+output: html_document
+---
+
+### Problem 1
+## Create subdirectory
+```{r}
+dir.create("./hw2data")
+
+```
+
