@@ -19,7 +19,7 @@ dir.create("./hw2data")
 transit_data = read.csv("./hw2data/NYC_Transit_Subway_Entrance_And_Exit_Data.csv")
 transit_data = janitor::clean_names(transit_data) # clean name of data
 
-transit_data
+
 
 newtransit_data = select(transit_data, # filter columns 
   line:route11, entry, entrance_type, vending, ada) %>%
@@ -27,6 +27,8 @@ newtransit_data = select(transit_data, # filter columns
   
 
 newtransit_data
+
+distinct(newtransit_data, line, station_name)
 
 
 ```
