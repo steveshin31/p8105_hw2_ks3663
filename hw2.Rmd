@@ -16,19 +16,63 @@ dir.create("./hw2data")
 ```
 
 ```{r}
-transit_data = read.csv("./hw2data/NYC_Transit_Subway_Entrance_And_Exit_Data.csv")
-transit_data = janitor::clean_names(transit_data) # clean name of data
-
-
-
-newtransit_data = select(transit_data, # filter columns 
-  line:route11, entry, entrance_type, vending, ada) %>%
+transit_data = read.csv("./hw2data/NYC_Transit_Subway_Entrance_And_Exit_Data.csv") %>%
+  janitor::clean_names() %>% # clean name of data
+  select(line:route11, entry, entrance_type, vending, ada) %>% # filter columns 
   mutate(entry = ifelse(entry == "YES", TRUE, FALSE))  # convert character into logical
   
+transit_data
 
-newtransit_data
 
-distinct(newtransit_data, line, station_name)
+
+
+x = distinct(transit_data, line, station_name) # Count number of distinct stations
+
+y = distinct(transit_data, line, station_name, route1, route2, route3, route4, route5, route6, route7, route8, route9, route10, route11)
+
+sum(transit_data$ada == "TRUE") # Count how many stations are ADA compliant
+
+
+
+
+
+```
+
+## Problem 2
+
+```{r}
+library(readxl)
+
+wheel_data = read_excel(
+  "./hw2data/HealthyHarborWaterWheelTotals2017-9-26.xlsx", sheet = 1) %>%
+  janitor::clean_names() %>% # import data and clean names
+  select(range = cell_cols())
+
+wheel_data
+
+
+
+```
+
+
+## Problem 3
+```{r}
+devtools::install_github("p8105/p8105.datasets")
+
+library(p8105.datasets)
+
+data("brfss_smart2010")
+
+brfss_smart2010
+
+
+filtered_brfss = brfss_smart2010 %>%
+  janitor::clean_names() %>%
+  filter(topic == "Overall Health") %>%
+  select(-class, -topic, -question, -sample_size, -(confidence_limit_low:geo_location))
+filtered_brfss
+
+distinct(filtered_brfss, locationde)
 
 
 ```
