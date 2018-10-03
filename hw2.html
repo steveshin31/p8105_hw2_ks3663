@@ -144,17 +144,12 @@ $(document).ready(function () {
 ## x dplyr::lag()    masks stats::lag()</code></pre>
 <pre class="r"><code>dir.create(&quot;./hw2data&quot;)</code></pre>
 <pre><code>## Warning in dir.create(&quot;./hw2data&quot;): '.\hw2data' already exists</code></pre>
-<pre class="r"><code>transit_data = read.csv(&quot;./hw2data/NYC_Transit_Subway_Entrance_And_Exit_Data.csv&quot;)
-transit_data = janitor::clean_names(transit_data) # clean name of data
-
-
-
-newtransit_data = select(transit_data, # filter columns 
-  line:route11, entry, entrance_type, vending, ada) %&gt;%
+<pre class="r"><code>transit_data = read.csv(&quot;./hw2data/NYC_Transit_Subway_Entrance_And_Exit_Data.csv&quot;) %&gt;%
+  janitor::clean_names() %&gt;% # clean name of data
+  select(line:route11, entry, entrance_type, vending, ada) %&gt;% # filter columns 
   mutate(entry = ifelse(entry == &quot;YES&quot;, TRUE, FALSE))  # convert character into logical
   
-
-newtransit_data</code></pre>
+transit_data</code></pre>
 <pre><code>##                   line                            station_name
 ## 1             4 Avenue                                 25th St
 ## 2             4 Avenue                                 25th St
@@ -7631,474 +7626,120 @@ newtransit_data</code></pre>
 ## 1866     YES FALSE
 ## 1867     YES  TRUE
 ## 1868     YES  TRUE</code></pre>
-<pre class="r"><code>distinct(newtransit_data, line, station_name)</code></pre>
-<pre><code>##                  line                            station_name
-## 1            4 Avenue                                 25th St
-## 2            4 Avenue                                 36th St
-## 3            4 Avenue                                 45th St
-## 4            4 Avenue                                 53rd St
-## 5            4 Avenue                                 59th St
-## 6            4 Avenue                                 77th St
-## 7            4 Avenue                                 86th St
-## 8            4 Avenue                                 95th St
-## 9            4 Avenue                                  9th St
-## 10           4 Avenue                Atlantic Av-Barclays Ctr
-## 11           4 Avenue                            Bay Ridge Av
-## 12           4 Avenue                               DeKalb Av
-## 13           4 Avenue                              Pacific St
-## 14           4 Avenue                             Prospect Av
-## 15           4 Avenue                                Union St
-## 16    42nd St Shuttle                           Grand Central
-## 17    42nd St Shuttle                            Times Square
-## 18           6 Avenue                                 14th St
-## 19           6 Avenue                                 23rd St
-## 20           6 Avenue                                  2nd Av
-## 21           6 Avenue                                 34th St
-## 22           6 Avenue                                 42nd St
-## 23           6 Avenue          47-50th Sts Rockefeller Center
-## 24           6 Avenue                                  4th Av
-## 25           6 Avenue                                 57th St
-## 26           6 Avenue                                  7th Av
-## 27           6 Avenue                               Bergen St
-## 28           6 Avenue                   Broadway-Lafayette St
-## 29           6 Avenue                              Carroll St
-## 30           6 Avenue                               Church Av
-## 31           6 Avenue                             Delancey St
-## 32           6 Avenue                           East Broadway
-## 33           6 Avenue                   Fort Hamilton Parkway
-## 34           6 Avenue                                Grand St
-## 35           6 Avenue                     Prospect Park-15 St
-## 36           6 Avenue                            Smith-9th St
-## 37           6 Avenue                                 York St
-## 38        63rd Street                                 21st St
-## 39        63rd Street                            Lexington Av
-## 40        63rd Street                        Roosevelt Island
-## 41           8 Avenue                                103rd St
-## 42           8 Avenue                                116th St
-## 43           8 Avenue                                125th St
-## 44           8 Avenue                                135th St
-## 45           8 Avenue                                145th St
-## 46           8 Avenue                                 14th St
-## 47           8 Avenue                                155th St
-## 48           8 Avenue                 163rd St - Amsterdam Av
-## 49           8 Avenue           168th St - Washington Heights
-## 50           8 Avenue                                175th St
-## 51           8 Avenue                                181st St
-## 52           8 Avenue                                190th St
-## 53           8 Avenue                                 23rd St
-## 54           8 Avenue                                 34th St
-## 55           8 Avenue                                 42nd St
-## 56           8 Avenue                                 50th St
-## 57           8 Avenue                                 59th St
-## 58           8 Avenue                                 72nd St
-## 59           8 Avenue     81st St - Museum of Natural History
-## 60           8 Avenue                                 86th St
-## 61           8 Avenue                                 96th St
-## 62           8 Avenue                         Broadway-Nassau
-## 63           8 Avenue                                Canal St
-## 64           8 Avenue              Cathedral Parkway-110th St
-## 65           8 Avenue                             Chambers St
-## 66           8 Avenue                     Dyckman St-200th St
-## 67           8 Avenue                                 High St
-## 68           8 Avenue                       Inwood - 207th St
-## 69           8 Avenue                               Spring St
-## 70           8 Avenue                             West 4th St
-## 71           8 Avenue                      World Trade Center
-## 72          Archer Av                        Jamaica-Van Wyck
-## 73          Archer Av Parsons Blvd-Archer Av - Jamaica Center
-## 74          Archer Av            Sutphin Blvd-Archer Av - JFK
-## 75            Astoria                          30 Av-Grand Av
-## 76            Astoria                     36 Av-Washington Av
-## 77            Astoria                          39 Av-Beebe Av
-## 78            Astoria                    Astoria Blvd-Hoyt Av
-## 79            Astoria                                Broadway
-## 80            Astoria                            Ditmars Blvd
-## 81           Brighton                                  7th Av
-## 82           Brighton                             Atlantic Av
-## 83           Brighton                                    Av H
-## 84           Brighton                                    Av J
-## 85           Brighton                                    Av M
-## 86           Brighton                                    Av U
-## 87           Brighton                              Beverly Rd
-## 88           Brighton                          Brighton Beach
-## 89           Brighton                               Church Av
-## 90           Brighton                            Cortelyou Rd
-## 91           Brighton                           Kings Highway
-## 92           Brighton                                 Neck Rd
-## 93           Brighton                              Newkirk Av
-## 94           Brighton                           Ocean Parkway
-## 95           Brighton                             Parkside Av
-## 96           Brighton                           Prospect Park
-## 97           Brighton                          Sheepshead Bay
-## 98           Brighton                            Stillwell Av
-## 99           Brighton                             West 8th St
-## 100          Broadway                                 23rd St
-## 101          Broadway                                 28th St
-## 102          Broadway                                 34th St
-## 103          Broadway                                 49th St
-## 104          Broadway                                 57th St
-## 105          Broadway                                  5th Av
-## 106          Broadway                                  8th St
-## 107          Broadway                           Canal St (UL)
-## 108          Broadway                               City Hall
-## 109          Broadway                            Cortlandt St
-## 110          Broadway                                Court St
-## 111          Broadway                             Lawrence St
-## 112          Broadway                            Lexington Av
-## 113          Broadway                               Prince St
-## 114          Broadway                               Rector St
-## 115          Broadway                    Times Square-42nd St
-## 116          Broadway                            Union Square
-## 117          Broadway                            Whitehall St
-## 118  Broadway Jamaica                       104th St-102nd St
-## 119  Broadway Jamaica                                111th St
-## 120  Broadway Jamaica                                121st St
-## 121  Broadway Jamaica                              Alabama Av
-## 122  Broadway Jamaica                             Chauncey St
-## 123  Broadway Jamaica                            Cleveland St
-## 124  Broadway Jamaica                             Crescent St
-## 125  Broadway Jamaica                           Cypress Hills
-## 126  Broadway Jamaica                    Elderts Lane-75th St
-## 127  Broadway Jamaica                             Flushing Av
-## 128  Broadway Jamaica                  Forest Parkway-85th St
-## 129  Broadway Jamaica                                Gates Av
-## 130  Broadway Jamaica                               Halsey St
-## 131  Broadway Jamaica                                Hewes St
-## 132  Broadway Jamaica                            Kosciusko St
-## 133  Broadway Jamaica                              Lorimer St
-## 134  Broadway Jamaica                                Marcy Av
-## 135  Broadway Jamaica                               Myrtle Av
-## 136  Broadway Jamaica                              Norwood Av
-## 137  Broadway Jamaica                           Van Siclen Av
-## 138  Broadway Jamaica                          Woodhaven Blvd
-## 139  Broadway-7th Ave                                103rd St
-## 140  Broadway-7th Ave            116th St-Columbia University
-## 141  Broadway-7th Ave                                125th St
-## 142  Broadway-7th Ave                   137th St-City College
-## 143  Broadway-7th Ave                                145th St
-## 144  Broadway-7th Ave                                 14th St
-## 145  Broadway-7th Ave                                157th St
-## 146  Broadway-7th Ave                                168th St
-## 147  Broadway-7th Ave                                181st St
-## 148  Broadway-7th Ave                                 18th St
-## 149  Broadway-7th Ave                                191st St
-## 150  Broadway-7th Ave                                207th St
-## 151  Broadway-7th Ave                                215th St
-## 152  Broadway-7th Ave                                231st St
-## 153  Broadway-7th Ave                                238th St
-## 154  Broadway-7th Ave                                 23rd St
-## 155  Broadway-7th Ave                                 28th St
-## 156  Broadway-7th Ave                                 34th St
-## 157  Broadway-7th Ave                                 50th St
-## 158  Broadway-7th Ave                 59th St-Columbus Circle
-## 159  Broadway-7th Ave                  66th St-Lincoln Center
-## 160  Broadway-7th Ave                                 72nd St
-## 161  Broadway-7th Ave                                 79th St
-## 162  Broadway-7th Ave                                 86th St
-## 163  Broadway-7th Ave                                 96th St
-## 164  Broadway-7th Ave                                Canal St
-## 165  Broadway-7th Ave              Cathedral Parkway-110th St
-## 166  Broadway-7th Ave                             Chambers St
-## 167  Broadway-7th Ave                          Christopher St
-## 168  Broadway-7th Ave                              Dyckman St
-## 169  Broadway-7th Ave                             Franklin St
-## 170  Broadway-7th Ave                              Houston St
-## 171  Broadway-7th Ave                    Marble Hill-225th St
-## 172  Broadway-7th Ave                               Rector St
-## 173  Broadway-7th Ave                             South Ferry
-## 174  Broadway-7th Ave                            Times Square
-## 175  Broadway-7th Ave             Van Cortlandt Park-242nd St
-## 176          Canarsie                                  1st Av
-## 177          Canarsie                                  3rd Av
-## 178          Canarsie                                  6th Av
-## 179          Canarsie                                  8th Av
-## 180          Canarsie                             Atlantic Av
-## 181          Canarsie                              Bedford Av
-## 182          Canarsie                             Bushwick Av
-## 183          Canarsie             Canarsie - Rockaway Parkway
-## 184          Canarsie                               DeKalb Av
-## 185          Canarsie                           East 105th St
-## 186          Canarsie                               Graham Av
-## 187          Canarsie                                Grand St
-## 188          Canarsie                               Halsey St
-## 189          Canarsie                            Jefferson St
-## 190          Canarsie                              Livonia Av
-## 191          Canarsie                              Lorimer St
-## 192          Canarsie                             Montrose Av
-## 193          Canarsie                               Morgan Av
-## 194          Canarsie                               Myrtle Av
-## 195          Canarsie                             New Lots Av
-## 196          Canarsie                               Sutter Av
-## 197          Canarsie                            Union Square
-## 198          Canarsie                               Wilson Av
-## 199             Clark                            Borough Hall
-## 200             Clark                                Clark St
-## 201             Clark                               Fulton St
-## 202             Clark                              Park Place
-## 203             Clark                                 Wall St
-## 204         Concourse                                155th St
-## 205         Concourse                                167th St
-## 206         Concourse                                170th St
-## 207         Concourse                           174-175th Sts
-## 208         Concourse                         182nd-183rd Sts
-## 209         Concourse                       Bedford Park Blvd
-## 210         Concourse                              Fordham Rd
-## 211         Concourse                          Kingsbridge Rd
-## 212         Concourse                        Norwood-205th St
-## 213         Concourse                              Tremont Av
-## 214         Concourse                 Yankee Stadium-161st St
-## 215      Coney Island                            Stillwell Av
-## 216      Coney Island                             West 8th St
-## 217         Crosstown                                 21st St
-## 218         Crosstown                    Bedford-Nostrand Avs
-## 219         Crosstown                                Broadway
-## 220         Crosstown                              Classon Av
-## 221         Crosstown                  Clinton-Washington Avs
-## 222         Crosstown                             Flushing Av
-## 223         Crosstown                               Fulton St
-## 224         Crosstown                           Greenpoint Av
-## 225         Crosstown           Long Island City-Court Square
-## 226         Crosstown                         Metropolitan Av
-## 227         Crosstown                   Myrtle-Willoughby Avs
-## 228         Crosstown                               Nassau Av
-## 229            Culver                                 18th Av
-## 230            Culver                                    Av I
-## 231            Culver                                    Av N
-## 232            Culver                                    Av P
-## 233            Culver                                    Av U
-## 234            Culver                                    Av X
-## 235            Culver                     Bay Parkway-22nd Av
-## 236            Culver                               Ditmas Av
-## 237            Culver                           Kings Highway
-## 238            Culver                   Neptune Av-Van Siclen
-## 239           Dyre Av                           Baychester Av
-## 240           Dyre Av                     Eastchester-Dyre Av
-## 241           Dyre Av                             Gun Hill Rd
-## 242           Dyre Av                             Morris Park
-## 243           Dyre Av                          Pelham Parkway
-## 244   Eastern Parkway                Atlantic Av-Barclays Ctr
-## 245   Eastern Parkway                               Bergen St
-## 246   Eastern Parkway         Eastern Parkway-Brooklyn Museum
-## 247   Eastern Parkway                             Franklin Av
-## 248   Eastern Parkway                        Grand Army Plaza
-## 249   Eastern Parkway                                 Hoyt St
-## 250   Eastern Parkway                             Kingston Av
-## 251   Eastern Parkway                               Nevins St
-## 252   Eastern Parkway                             Nostrand Av
-## 253   Eastern Parkway                                Utica Av
-## 254          Flushing                                103rd St
-## 255          Flushing                                111th St
-## 256          Flushing                    45 Rd-Court House Sq
-## 257          Flushing                                  5th Av
-## 258          Flushing                 82nd St-Jackson Heights
-## 259          Flushing                        90th St Elmhurst
-## 260          Flushing                        Bliss St-46th St
-## 261          Flushing                        Broadway-74th St
-## 262          Flushing                         Fisk Av-69th St
-## 263          Flushing                        Flushing-Main St
-## 264          Flushing                   Grand Central-42nd St
-## 265          Flushing                           Hunters Point
-## 266          Flushing                           Junction Blvd
-## 267          Flushing                      Lincoln Av-52nd St
-## 268          Flushing                       Lowery St-40th St
-## 269          Flushing                    Mets - Willets Point
-## 270          Flushing                        Queensboro Plaza
-## 271          Flushing                       Rawson St-33rd St
-## 272          Flushing                  Vernon Blvd-Jackson Av
-## 273          Flushing                     Woodside Av-61st St
-## 274          Franklin                         Botanic Gardens
-## 275          Franklin                             Franklin Av
-## 276          Franklin                              Park Place
-## 277            Fulton         Broadway Junction-East New York
-## 278            Fulton                Clinton &amp; Washington Avs
-## 279            Fulton                               Euclid Av
-## 280            Fulton                             Franklin Av
-## 281            Fulton                     Hoyt &amp; Schermerhorn
-## 282            Fulton                   Jay St - Borough Hall
-## 283            Fulton                         Kingston-Throop
-## 284            Fulton                            Lafayette Av
-## 285            Fulton                              Liberty Av
-## 286            Fulton                             Nostrand Av
-## 287            Fulton                                Ralph Av
-## 288            Fulton                             Rockaway Av
-## 289            Fulton                             Shepherd Av
-## 290            Fulton                                Utica Av
-## 291            Fulton                           Van Siclen Av
-## 292            Jerome                                138th St
-## 293            Jerome                149th St-Grand Concourse
-## 294            Jerome                                167th St
-## 295            Jerome                                170th St
-## 296            Jerome                                176th St
-## 297            Jerome                                183rd St
-## 298            Jerome        Bedford Park Blvd-Lehman College
-## 299            Jerome                             Burnside Av
-## 300            Jerome                              Fordham Rd
-## 301            Jerome                          Kingsbridge Rd
-## 302            Jerome                         Mosholu Parkway
-## 303            Jerome                              Mt Eden Av
-## 304            Jerome                                Woodlawn
-## 305            Jerome                 Yankee Stadium-161st St
-## 306             Lenox             110th St-Central Park North
-## 307             Lenox                                116th St
-## 308             Lenox                                125th St
-## 309             Lenox                                135th St
-## 310             Lenox                                145th St
-## 311             Lenox                         Harlem-148th St
-## 312         Lexington                                103rd St
-## 313         Lexington                                110th St
-## 314         Lexington                                116th St
-## 315         Lexington                                125th St
-## 316         Lexington                    14th St-Union Square
-## 317         Lexington                                 23rd St
-## 318         Lexington                                 28th St
-## 319         Lexington                                 33rd St
-## 320         Lexington                                 51st St
-## 321         Lexington                                 59th St
-## 322         Lexington                  68th St-Hunter College
-## 323         Lexington                                 77th St
-## 324         Lexington                                 86th St
-## 325         Lexington                                 96th St
-## 326         Lexington                             Astor Place
-## 327         Lexington                             Bleecker St
-## 328         Lexington                            Borough Hall
-## 329         Lexington                           Bowling Green
-## 330         Lexington               Brooklyn Bridge-City Hall
-## 331         Lexington                                Canal St
-## 332         Lexington                               Fulton St
-## 333         Lexington                   Grand Central-42nd St
-## 334         Lexington                               Spring St
-## 335         Lexington                                 Wall St
-## 336           Liberty                      104th St-Oxford Av
-## 337           Liberty                   111th St-Greenwood Av
-## 338           Liberty                       80th St-Hudson St
-## 339           Liberty                         88th St-Boyd Av
-## 340           Liberty                                Grant Av
-## 341           Liberty                           Lefferts Blvd
-## 342           Liberty                           Rockaway Blvd
-## 343            Myrtle                              Central Av
-## 344            Myrtle                               Forest Av
-## 345            Myrtle                           Fresh Pond Rd
-## 346            Myrtle                        Knickerbocker Av
-## 347            Myrtle                         Metropolitan Av
-## 348            Myrtle                               Seneca Av
-## 349            Nassau                                  Bowery
-## 350            Nassau                                Broad St
-## 351            Nassau                                Canal St
-## 352            Nassau                             Chambers St
-## 353            Nassau                                Essex St
-## 354            Nassau                               Fulton St
-## 355          New Lots                               Junius St
-## 356          New Lots                             New Lots Av
-## 357          New Lots                         Pennsylvania Av
-## 358          New Lots                             Rockaway Av
-## 359          New Lots                             Saratoga Av
-## 360          New Lots                               Sutter Av
-## 361          New Lots                           Van Siclen Av
-## 362          Nostrand                              Beverly Rd
-## 363          Nostrand                               Church Av
-## 364          Nostrand            Flatbush Av-Brooklyn College
-## 365          Nostrand                              Newkirk Av
-## 366          Nostrand                            President St
-## 367          Nostrand                             Sterling St
-## 368          Nostrand                             Winthrop St
-## 369            Pelham                        138th St-3rd Ave
-## 370            Pelham                                Brook Av
-## 371            Pelham                                Buhre Av
-## 372            Pelham                          Castle Hill Av
-## 373            Pelham                              Cypress Av
-## 374            Pelham              East 143rd St-St Mary's St
-## 375            Pelham                           East 149th St
-## 376            Pelham                                Elder Av
-## 377            Pelham                          Hunts Point Av
-## 378            Pelham                             Longwood Av
-## 379            Pelham                           Middletown Rd
-## 380            Pelham                Morrison Av-Soundview Av
-## 381            Pelham               Parkchester-East 177th St
-## 382            Pelham                         Pelham Bay Park
-## 383            Pelham                          St Lawrence Av
-## 384            Pelham      Westchester Square-East Tremont Av
-## 385            Pelham                             Whitlock Av
-## 386            Pelham                               Zerega Av
-## 387  Queens Boulevard                                169th St
-## 388  Queens Boulevard                          23rd St-Ely Av
-## 389  Queens Boulevard                                 36th St
-## 390  Queens Boulevard                                 46th St
-## 391  Queens Boulevard                          5th Av-53rd St
-## 392  Queens Boulevard                    63rd Drive-Rego Park
-## 393  Queens Boulevard                                 65th St
-## 394  Queens Boulevard                                 67th Av
-## 395  Queens Boulevard                                 75th Av
-## 396  Queens Boulevard                                  7th Av
-## 397  Queens Boulevard                 Briarwood-Van Wyck Blvd
-## 398  Queens Boulevard                             Elmhurst Av
-## 399  Queens Boulevard                    Forest Hills-71st Av
-## 400  Queens Boulevard                        Grand Av-Newtown
-## 401  Queens Boulevard           Jackson Heights-Roosevelt Ave
-## 402  Queens Boulevard                        Jamaica-179th St
-## 403  Queens Boulevard              Kew Gardens-Union Turnpike
-## 404  Queens Boulevard                    Lexington Av-53rd St
-## 405  Queens Boulevard                           Northern Blvd
-## 406  Queens Boulevard                            Parsons Blvd
-## 407  Queens Boulevard                            Queens Plaza
-## 408  Queens Boulevard                             Steinway St
-## 409  Queens Boulevard                            Sutphin Blvd
-## 410  Queens Boulevard                          Woodhaven Blvd
-## 411          Rockaway                      Aqueduct Racetrack
-## 412          Rockaway               Aqueduct-North Conduit Av
-## 413          Rockaway                          Beach 105th St
-## 414          Rockaway                           Beach 25th St
-## 415          Rockaway                           Beach 36th St
-## 416          Rockaway                           Beach 44th St
-## 417          Rockaway                           Beach 60th St
-## 418          Rockaway                           Beach 67th St
-## 419          Rockaway                           Beach 90th St
-## 420          Rockaway                           Beach 98th St
-## 421          Rockaway                           Broad Channel
-## 422          Rockaway                    Far Rockaway-Mott Av
-## 423          Rockaway                            Howard Beach
-## 424          Rockaway               Rockaway Park-Beach 116th
-## 425         Sea Beach                                 18th Av
-## 426         Sea Beach                                 20th Av
-## 427         Sea Beach                                 86th St
-## 428         Sea Beach                                  8th Av
-## 429         Sea Beach                                    Av U
-## 430         Sea Beach                     Bay Parkway-22nd Av
-## 431         Sea Beach                   Fort Hamilton Parkway
-## 432         Sea Beach                           Kings Highway
-## 433         Sea Beach                          New Utrecht Av
-## 434          West End                                 18th Av
-## 435          West End                                 20th Av
-## 436          West End                                 25th Av
-## 437          West End                                 50th St
-## 438          West End                                 55th St
-## 439          West End                                 62nd St
-## 440          West End                                 71st St
-## 441          West End                                 79th St
-## 442          West End                                  9th Av
-## 443          West End                             Bay 50th St
-## 444          West End                             Bay Parkway
-## 445          West End                   Fort Hamilton Parkway
-## 446 White Plains Road                         149th St-3rd Av
-## 447 White Plains Road                                174th St
-## 448 White Plains Road                                219th St
-## 449 White Plains Road                                225th St
-## 450 White Plains Road                                233rd St
-## 451 White Plains Road                      238th St-Nereid Av
-## 452 White Plains Road                             Allerton Av
-## 453 White Plains Road                         Bronx Park East
-## 454 White Plains Road                                Burke Av
-## 455 White Plains Road                           East 180th St
-## 456 White Plains Road           East Tremont Av-West Farms Sq
-## 457 White Plains Road                              Freeman St
-## 458 White Plains Road                             Gun Hill Rd
-## 459 White Plains Road                            Intervale Av
-## 460 White Plains Road                              Jackson Av
-## 461 White Plains Road                          Pelham Parkway
-## 462 White Plains Road                             Prospect Av
-## 463 White Plains Road                              Simpson St
-## 464 White Plains Road                      Wakefield-241st St
-## 465          Flushing                      34 St Hudson Yards</code></pre>
+<pre class="r"><code>x = distinct(transit_data, line, station_name) # Count number of distinct stations
+
+y = distinct(transit_data, line, station_name, route1, route2, route3, route4, route5, route6, route7, route8, route9, route10, route11)
+
+sum(transit_data$ada == &quot;TRUE&quot;) # Count how many stations are ADA compliant</code></pre>
+<pre><code>## [1] 468</code></pre>
 </div>
+</div>
+<div id="problem-2" class="section level2">
+<h2>Problem 2</h2>
+<pre class="r"><code>library(readxl)</code></pre>
+</div>
+<div id="problem-3" class="section level2">
+<h2>Problem 3</h2>
+<pre class="r"><code>devtools::install_github(&quot;p8105/p8105.datasets&quot;)</code></pre>
+<pre><code>## Skipping install of 'p8105.datasets' from a github remote, the SHA1 (21f5ad1c) has not changed since last install.
+##   Use `force = TRUE` to force installation</code></pre>
+<pre class="r"><code>library(p8105.datasets)
+
+data(&quot;brfss_smart2010&quot;)
+
+brfss_smart2010</code></pre>
+<pre><code>## # A tibble: 134,203 x 23
+##     Year Locationabbr Locationdesc Class Topic Question Response
+##    &lt;int&gt; &lt;chr&gt;        &lt;chr&gt;        &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;    &lt;chr&gt;   
+##  1  2010 AL           AL - Jeffer~ Heal~ Over~ How is ~ Excelle~
+##  2  2010 AL           AL - Jeffer~ Heal~ Over~ How is ~ Very go~
+##  3  2010 AL           AL - Jeffer~ Heal~ Over~ How is ~ Good    
+##  4  2010 AL           AL - Jeffer~ Heal~ Over~ How is ~ Fair    
+##  5  2010 AL           AL - Jeffer~ Heal~ Over~ How is ~ Poor    
+##  6  2010 AL           AL - Jeffer~ Heal~ Fair~ Health ~ Good or~
+##  7  2010 AL           AL - Jeffer~ Heal~ Fair~ Health ~ Fair or~
+##  8  2010 AL           AL - Jeffer~ Heal~ Heal~ Do you ~ Yes     
+##  9  2010 AL           AL - Jeffer~ Heal~ Heal~ Do you ~ No      
+## 10  2010 AL           AL - Jeffer~ Heal~ Unde~ Adults ~ Yes     
+## # ... with 134,193 more rows, and 16 more variables: Sample_Size &lt;int&gt;,
+## #   Data_value &lt;dbl&gt;, Confidence_limit_Low &lt;dbl&gt;,
+## #   Confidence_limit_High &lt;dbl&gt;, Display_order &lt;int&gt;,
+## #   Data_value_unit &lt;chr&gt;, Data_value_type &lt;chr&gt;,
+## #   Data_Value_Footnote_Symbol &lt;chr&gt;, Data_Value_Footnote &lt;chr&gt;,
+## #   DataSource &lt;chr&gt;, ClassId &lt;chr&gt;, TopicId &lt;chr&gt;, LocationID &lt;chr&gt;,
+## #   QuestionID &lt;chr&gt;, RESPID &lt;chr&gt;, GeoLocation &lt;chr&gt;</code></pre>
+<pre class="r"><code>filtered_brfss = brfss_smart2010 %&gt;%
+  janitor::clean_names() %&gt;%
+  filter(topic == &quot;Overall Health&quot;) %&gt;%
+  select(-class, -topic, -question, -sample_size, -(confidence_limit_low:geo_location)) %&gt;%
+  spread(key = &quot;response&quot;, value = &quot;data_value&quot;) %&gt;%  # making rows into columns
+  janitor::clean_names() %&gt;% # clean new columns 
+  mutate(exc_very_prop = excellent + very_good) # create proportion column
+
+filtered_brfss  </code></pre>
+<pre><code>## # A tibble: 2,125 x 9
+##     year locationabbr locationdesc excellent  fair  good  poor very_good
+##    &lt;int&gt; &lt;chr&gt;        &lt;chr&gt;            &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;
+##  1  2002 AK           AK - Anchor~      27.9   8.6  23.8   5.9      33.7
+##  2  2002 AL           AL - Jeffer~      18.5  12.1  32.7   5.9      30.9
+##  3  2002 AR           AR - Pulask~      24.1  12.5  29.9   4.2      29.3
+##  4  2002 AZ           AZ - Marico~      21.6  10.3  26.9   4.6      36.6
+##  5  2002 AZ           AZ - Pima C~      26.6   7.5  31.9   3.9      30.1
+##  6  2002 CA           CA - Los An~      22.7  14.3  28.7   4.5      29.8
+##  7  2002 CO           CO - Adams ~      21.2  14.4  29     4.2      31.2
+##  8  2002 CO           CO - Arapah~      25.5   8    29.3   2.1      35.2
+##  9  2002 CO           CO - Denver~      22.2  11.1  36.6   3        27.1
+## 10  2002 CO           CO - Jeffer~      23.4  11.4  26.3   2.4      36.6
+## # ... with 2,115 more rows, and 1 more variable: exc_very_prop &lt;dbl&gt;</code></pre>
+<pre class="r"><code>distinct(filtered_brfss, locationdesc) # distinct locations</code></pre>
+<pre><code>## # A tibble: 404 x 1
+##    locationdesc               
+##    &lt;chr&gt;                      
+##  1 AK - Anchorage Municipality
+##  2 AL - Jefferson County      
+##  3 AR - Pulaski County        
+##  4 AZ - Maricopa County       
+##  5 AZ - Pima County           
+##  6 CA - Los Angeles County    
+##  7 CO - Adams County          
+##  8 CO - Arapahoe County       
+##  9 CO - Denver County         
+## 10 CO - Jefferson County      
+## # ... with 394 more rows</code></pre>
+<pre class="r"><code># There are 404 distinct locations represented in this data set.
+distinct(filtered_brfss, locationabbr) # distinct states</code></pre>
+<pre><code>## # A tibble: 51 x 1
+##    locationabbr
+##    &lt;chr&gt;       
+##  1 AK          
+##  2 AL          
+##  3 AR          
+##  4 AZ          
+##  5 CA          
+##  6 CO          
+##  7 CT          
+##  8 DC          
+##  9 DE          
+## 10 FL          
+## # ... with 41 more rows</code></pre>
+<pre class="r"><code># All states are represented in addition to D.C.
+head(subset(filtered_brfss, select = locationdesc))</code></pre>
+<pre><code>## # A tibble: 6 x 1
+##   locationdesc               
+##   &lt;chr&gt;                      
+## 1 AK - Anchorage Municipality
+## 2 AL - Jefferson County      
+## 3 AR - Pulaski County        
+## 4 AZ - Maricopa County       
+## 5 AZ - Pima County           
+## 6 CA - Los Angeles County</code></pre>
+<pre class="r"><code>filtered_brfss %&gt;%
+  filter(year == 2002) %&gt;% # filter by year 2002
+  summarize(median = median(excellent, na.rm = TRUE)) # show median for excellent</code></pre>
+<pre><code>## # A tibble: 1 x 1
+##   median
+##    &lt;dbl&gt;
+## 1   23.6</code></pre>
 </div>
 
 

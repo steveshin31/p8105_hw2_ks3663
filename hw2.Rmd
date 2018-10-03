@@ -33,9 +33,6 @@ y = distinct(transit_data, line, station_name, route1, route2, route3, route4, r
 sum(transit_data$ada == "TRUE") # Count how many stations are ADA compliant
 
 
-
-
-
 ```
 
 ## Problem 2
@@ -43,12 +40,6 @@ sum(transit_data$ada == "TRUE") # Count how many stations are ADA compliant
 ```{r}
 library(readxl)
 
-wheel_data = read_excel(
-  "./hw2data/HealthyHarborWaterWheelTotals2017-9-26.xlsx", sheet = 1) %>%
-  janitor::clean_names() %>% # import data and clean names
-  select(range = cell_cols())
-
-wheel_data
 
 
 
@@ -69,10 +60,25 @@ brfss_smart2010
 filtered_brfss = brfss_smart2010 %>%
   janitor::clean_names() %>%
   filter(topic == "Overall Health") %>%
-  select(-class, -topic, -question, -sample_size, -(confidence_limit_low:geo_location))
-filtered_brfss
+  select(-class, -topic, -question, -sample_size, -(confidence_limit_low:geo_location)) %>%
+  spread(key = "response", value = "data_value") %>%  # making rows into columns
+  janitor::clean_names() %>% # clean new columns 
+  mutate(exc_very_prop = excellent + very_good) # create proportion column
 
-distinct(filtered_brfss, locationde)
+filtered_brfss  
+
+distinct(filtered_brfss, locationdesc) # distinct locations
+# There are 404 distinct locations represented in this data set.
+distinct(filtered_brfss, locationabbr) # distinct states
+# All states are represented in addition to D.C.
+head(subset(filtered_brfss, select = locationdesc))
+
+
+
+filtered_brfss %>%
+  filter(year == 2002) %>% # filter by year 2002
+  summarize(median = median(excellent, na.rm = TRUE)) # show median for excellent
+
 
 
 ```
