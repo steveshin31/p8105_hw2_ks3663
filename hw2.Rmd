@@ -32,6 +32,20 @@ y = distinct(transit_data, line, station_name, route1, route2, route3, route4, r
 
 sum(transit_data$ada == "TRUE") # Count how many stations are ADA compliant
 
+	transit_data %>%
+	  filter(vending == "NO", entry == "TRUE") %>%
+	  select(entry) %>%
+	  sum(entry == "TRUE")
+	
+	  
+	
+	
+	  
+	
+	sum(newtransit_data$vending == "NO") %>%
+	  sum(newtransit_data$entry ==)
+	  
+
 
 ```
 
@@ -41,6 +55,13 @@ sum(transit_data$ada == "TRUE") # Count how many stations are ADA compliant
 library(readxl)
 
 
+	
+	wheel_data = read_excel(
+	  "./hw2data/HealthyHarborWaterWheelTotals2017-9-26.xlsx", sheet = 1) %>%
+	  janitor::clean_names() %>% # import data and clean names
+	  select(range = cell_cols())
+	
+	wheel_data
 
 
 ```
@@ -73,6 +94,10 @@ distinct(filtered_brfss, locationabbr) # distinct states
 # All states are represented in addition to D.C.
 head(subset(filtered_brfss, select = locationdesc))
 
+	filtered_brfss %>%
+	  count(locationabbr)
+	%>%
+	  sort(n, decreasing = TRUE)
 
 
 filtered_brfss %>%
