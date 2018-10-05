@@ -133,7 +133,10 @@ filtered_brfss %>%
   filter(year == 2002) %>% # filter by year 2002
   summarize(median = median(excellent, na.rm = TRUE)) # show median for excellent
 
-ggplot(filter(filtered_brfss, year == 2002 & !is.na(excellent)), aes(x = excellent)) + geom_histogram() # create histogram
+filtered_brfss %>%
+  filter(year == 2002) %>% # filter by year 
+  ggplot(aes(x = excellent)) + geom_histogram() # create histogram
+
 
 filtered_brfss %>%
   filter(locationdesc %in% 

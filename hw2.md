@@ -8277,10 +8277,14 @@ filtered_brfss %>%
     ## 1   23.6
 
 ``` r
-ggplot(filter(filtered_brfss, year == 2002 & !is.na(excellent)), aes(x = excellent)) + geom_histogram() # create histogram
+filtered_brfss %>%
+  filter(year == 2002) %>% # filter by year 
+  ggplot(aes(x = excellent)) + geom_histogram() # create histogram
 ```
 
     ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+
+    ## Warning: Removed 2 rows containing non-finite values (stat_bin).
 
 ![](hw2_files/figure-markdown_github/unnamed-chunk-4-1.png)
 
