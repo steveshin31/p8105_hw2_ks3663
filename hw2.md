@@ -8179,7 +8179,7 @@ filtered_brfss = brfss_smart2010 %>%
   select(-class, -topic, -question, -sample_size, -(confidence_limit_low:geo_location)) %>%
   spread(key = "response", value = "data_value") %>%  # making rows into columns
   janitor::clean_names() %>% # clean new columns 
-  mutate(exc_very_prop = excellent + very_good) # create proportion column
+  mutate(proportion_yv = excellent + very_good) # create proportion column
 
 filtered_brfss  
 ```
@@ -8197,7 +8197,7 @@ filtered_brfss
     ##  8  2002 CO           CO - Arapah~      25.5   8    29.3   2.1      35.2
     ##  9  2002 CO           CO - Denver~      22.2  11.1  36.6   3        27.1
     ## 10  2002 CO           CO - Jeffer~      23.4  11.4  26.3   2.4      36.6
-    ## # ... with 2,115 more rows, and 1 more variable: exc_very_prop <dbl>
+    ## # ... with 2,115 more rows, and 1 more variable: proportion_yv <dbl>
 
 ``` r
 distinct(filtered_brfss, locationdesc) # distinct locations
@@ -8240,20 +8240,32 @@ distinct(filtered_brfss, locationabbr) # distinct states
 
 ``` r
 # All states are represented in addition to D.C.
-head(subset(filtered_brfss, select = locationdesc))
+
+filtered_brfss %>%
+  group_by(locationabbr) %>%
+  summarize(n = n()) %>% # take count of number of state
+  arrange(-n) # put the count in descending order to show which state was observed most 
 ```
 
-    ## # A tibble: 6 x 1
-    ##   locationdesc               
-    ##   <chr>                      
-    ## 1 AK - Anchorage Municipality
-    ## 2 AL - Jefferson County      
-    ## 3 AR - Pulaski County        
-    ## 4 AZ - Maricopa County       
-    ## 5 AZ - Pima County           
-    ## 6 CA - Los Angeles County
+    ## # A tibble: 51 x 2
+    ##    locationabbr     n
+    ##    <chr>        <int>
+    ##  1 NJ             146
+    ##  2 FL             122
+    ##  3 NC             115
+    ##  4 WA              97
+    ##  5 MD              90
+    ##  6 MA              79
+    ##  7 TX              71
+    ##  8 NY              65
+    ##  9 SC              63
+    ## 10 CO              59
+    ## # ... with 41 more rows
 
 ``` r
+# New Jersey was observed most with 146 counts. 
+
+
 filtered_brfss %>%
   filter(year == 2002) %>% # filter by year 2002
   summarize(median = median(excellent, na.rm = TRUE)) # show median for excellent
@@ -8276,7 +8288,7 @@ ggplot(filter(filtered_brfss, year == 2002 & !is.na(excellent)), aes(x = excelle
 filtered_brfss %>%
   filter(locationdesc %in% 
            c("NY - New York County", "NY - Queens County")) %>% # filter by location
-  ggplot(aes(x = year, y = exc_very_prop, color = locationdesc)) +
+  ggplot(aes(x = year, y = proportion_yv, color = locationdesc)) +
   geom_point() # create scatter plot
 ```
 
