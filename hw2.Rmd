@@ -20,36 +20,34 @@ dir.create("./hw2data")
 transit_data = read.csv("./hw2data/NYC_Transit_Subway_Entrance_And_Exit_Data.csv") %>%
   janitor::clean_names() %>% # clean name of data
   select(line:route11, entry, entrance_type, vending, ada) %>% # filter columns 
-  mutate(entry = ifelse(entry == "YES", TRUE, FALSE))  # convert character into logical
+  mutate(entry = ifelse(entry == "YES", TRUE, FALSE)) %>% # convert character into logical
+  unique()
 
+transit_data
 # The dataset contains information regarding NYC subway stations including, the line name,
 # its location, its various routes, its entrance type, whether it has vending, whether it
 # allows entry, and whether or not it is ADA compliant. I cleaned the dataset by converting # the names into snake case and taking out superfluous columns such as the coordinates for 
-# the entrance. The new data set contained 1868 rows and 19 columns. 
+# the entrance. The new data set contained 684 rows and 19 columns. After the instructed  
+# tidying process, the dataset is relatively tidy, but there is still room for improvement. # For example, some stations are repeated. This was solved by using the unique function. 
 
 dim(transit_data) # show rows and columns of data
 
-transit_data
  
-
 transit_data %>%
   distinct(line, station_name)  # Count number of distinct stations
  
-  
-distinct(transit_data, line, station_name, route1, route2, route3, route4, route5, route6, route7, route8, route9, route10, route11)
+transit_data %>%
+  distinct(line, station_name, ada) %>%
+  summarize(sum(ada == "TRUE")) # Count how many stations are ADA compliant
 
-sum(transit_data$ada == "TRUE") # Count how many stations are ADA compliant
 
 transit_data %>%
 	filter(vending == "NO") %>%  # show only entrances without vending 
   summarize(total = n(), yes = sum(entry == "TRUE")) %>% # find number of allowed entries
   mutate(prop = yes / total) # find proportion 
 
+
 	
-
-
-
-
 
 ```
 
@@ -109,7 +107,7 @@ filter(wheel_data, year == 2018) %>%
   summarize(sum(weight_tons))
 
 ```
-There were `r nrow(combined_prcp)` and `r nrow(wheel_data)` observations for the precipitation data set and the trash wheel dataset, respectively.The total precipitation for 2017 was `r sum(prcp_2017$total)` and `r sum(prcp_2018$total)` for 2018. The median for precipitation for 2017 and 2018 were `r median(prcp_2017$total)` and `r median(prcp_2018$total)`, respectively. Some key variables for the trash dataset include the total trash weight in 2018 -- `r filter(wheel_data, year == 2018) %>% summarize(sum(weight_tons))` tons, median number of sports balls in 2017 -- `r wheel_data %>% filter(year == 2017) %>% summarize(median = median(sports_balls))` balls, and the mean of plastic bottles thrown out in 2018 -- `r filter(wheel_data, year == 2018) %>% summarize(mean(plastic_bottles))` bottles. 
+There were `r nrow(combined_prcp)` and `r nrow(wheel_data)` observations for the precipitation data set and the trash wheel dataset, respectively. The total precipitation for 2017 was `r sum(prcp_2017$total)` and `r sum(prcp_2018$total)` for 2018. The median for precipitation for 2017 and 2018 were `r median(prcp_2017$total)` and `r median(prcp_2018$total)`, respectively. Some key variables for the trash dataset include the total trash weight in 2018 -- `r filter(wheel_data, year == 2018) %>% summarize(sum(weight_tons))` tons, median number of sports balls in 2017 -- `r wheel_data %>% filter(year == 2017) %>% summarize(median = median(sports_balls))` balls, and the mean of plastic bottles thrown out in 2018 -- `r filter(wheel_data, year == 2018) %>% summarize(mean(plastic_bottles))` bottles. 
 
 
 ## Problem 3
