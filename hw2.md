@@ -34,7 +34,18 @@ transit_data = read.csv("./hw2data/NYC_Transit_Subway_Entrance_And_Exit_Data.csv
   janitor::clean_names() %>% # clean name of data
   select(line:route11, entry, entrance_type, vending, ada) %>% # filter columns 
   mutate(entry = ifelse(entry == "YES", TRUE, FALSE))  # convert character into logical
-  
+
+# The dataset contains information regarding NYC subway stations including, the line name,
+# its location, its various routes, its entrance type, whether it has vending, whether it
+# allows entry, and whether or not it is ADA compliant. I cleaned the dataset by converting # the names into snake case and taking out superfluous columns such as the coordinates for 
+# the entrance. The new data set contained 1868 rows and 19 columns. 
+
+dim(transit_data) # show rows and columns of data
+```
+
+    ## [1] 1868   19
+
+``` r
 transit_data
 ```
 
@@ -7516,13 +7527,8 @@ transit_data
     ## 1868     YES  TRUE
 
 ``` r
-dim(transit_data) # show rows and columns of data 
-```
-
-    ## [1] 1868   19
-
-``` r
-distinct(transit_data, line, station_name) # Count number of distinct stations
+transit_data %>%
+  distinct(line, station_name)  # Count number of distinct stations
 ```
 
     ##                  line                            station_name
@@ -7993,8 +7999,1415 @@ distinct(transit_data, line, station_name) # Count number of distinct stations
     ## 465          Flushing                      34 St Hudson Yards
 
 ``` r
-y = distinct(transit_data, line, station_name, route1, route2, route3, route4, route5, route6, route7, route8, route9, route10, route11)
+distinct(transit_data, line, station_name, route1, route2, route3, route4, route5, route6, route7, route8, route9, route10, route11)
+```
 
+    ##                  line                            station_name route1
+    ## 1            4 Avenue                                 25th St      R
+    ## 2            4 Avenue                                 36th St      N
+    ## 3            4 Avenue                                 45th St      R
+    ## 4            4 Avenue                                 53rd St      R
+    ## 5            4 Avenue                                 59th St      N
+    ## 6            4 Avenue                                 77th St      R
+    ## 7            4 Avenue                                 86th St      R
+    ## 8            4 Avenue                                 95th St      R
+    ## 9            4 Avenue                                  9th St      F
+    ## 10           4 Avenue                Atlantic Av-Barclays Ctr      B
+    ## 11           4 Avenue                            Bay Ridge Av      R
+    ## 12           4 Avenue                               DeKalb Av      B
+    ## 13           4 Avenue                              Pacific St      B
+    ## 14           4 Avenue                             Prospect Av      R
+    ## 15           4 Avenue                                Union St      R
+    ## 16    42nd St Shuttle                           Grand Central     GS
+    ## 17    42nd St Shuttle                            Times Square      A
+    ## 18           6 Avenue                                 14th St      F
+    ## 19           6 Avenue                                 23rd St      F
+    ## 20           6 Avenue                                  2nd Av      F
+    ## 21           6 Avenue                                 34th St      B
+    ## 22           6 Avenue                                 42nd St      B
+    ## 23           6 Avenue          47-50th Sts Rockefeller Center      B
+    ## 24           6 Avenue          47-50th Sts Rockefeller Center      B
+    ## 25           6 Avenue                                  4th Av      F
+    ## 26           6 Avenue                                 57th St      F
+    ## 27           6 Avenue                                  7th Av      F
+    ## 28           6 Avenue                               Bergen St      F
+    ## 29           6 Avenue                   Broadway-Lafayette St      B
+    ## 30           6 Avenue                              Carroll St      F
+    ## 31           6 Avenue                               Church Av      F
+    ## 32           6 Avenue                             Delancey St      F
+    ## 33           6 Avenue                           East Broadway      F
+    ## 34           6 Avenue                   Fort Hamilton Parkway      F
+    ## 35           6 Avenue                                Grand St      B
+    ## 36           6 Avenue                     Prospect Park-15 St      F
+    ## 37           6 Avenue                            Smith-9th St      F
+    ## 38           6 Avenue                                 York St      F
+    ## 39        63rd Street                                 21st St      F
+    ## 40        63rd Street                            Lexington Av      F
+    ## 41        63rd Street                        Roosevelt Island      F
+    ## 42           8 Avenue                                103rd St      B
+    ## 43           8 Avenue                                116th St      B
+    ## 44           8 Avenue                                125th St      A
+    ## 45           8 Avenue                                135th St      B
+    ## 46           8 Avenue                                145th St      A
+    ## 47           8 Avenue                                 14th St      A
+    ## 48           8 Avenue                                155th St      C
+    ## 49           8 Avenue                 163rd St - Amsterdam Av      C
+    ## 50           8 Avenue           168th St - Washington Heights      A
+    ## 51           8 Avenue                                175th St      A
+    ## 52           8 Avenue                                181st St      A
+    ## 53           8 Avenue                                190th St      A
+    ## 54           8 Avenue                                 23rd St      C
+    ## 55           8 Avenue                                 34th St      A
+    ## 56           8 Avenue                                 42nd St      A
+    ## 57           8 Avenue                                 50th St      C
+    ## 58           8 Avenue                                 59th St      A
+    ## 59           8 Avenue                                 72nd St      B
+    ## 60           8 Avenue     81st St - Museum of Natural History      B
+    ## 61           8 Avenue                                 86th St      B
+    ## 62           8 Avenue                                 96th St      B
+    ## 63           8 Avenue                         Broadway-Nassau      A
+    ## 64           8 Avenue                                Canal St      A
+    ## 65           8 Avenue              Cathedral Parkway-110th St      B
+    ## 66           8 Avenue                             Chambers St      A
+    ## 67           8 Avenue                     Dyckman St-200th St      A
+    ## 68           8 Avenue                                 High St      A
+    ## 69           8 Avenue                       Inwood - 207th St      A
+    ## 70           8 Avenue                               Spring St      C
+    ## 71           8 Avenue                             West 4th St      A
+    ## 72           8 Avenue                      World Trade Center      A
+    ## 73          Archer Av                        Jamaica-Van Wyck      E
+    ## 74          Archer Av Parsons Blvd-Archer Av - Jamaica Center      E
+    ## 75          Archer Av            Sutphin Blvd-Archer Av - JFK      E
+    ## 76            Astoria                          30 Av-Grand Av      N
+    ## 77            Astoria                     36 Av-Washington Av      N
+    ## 78            Astoria                          39 Av-Beebe Av      N
+    ## 79            Astoria                    Astoria Blvd-Hoyt Av      N
+    ## 80            Astoria                                Broadway      N
+    ## 81            Astoria                            Ditmars Blvd      N
+    ## 82           Brighton                                  7th Av      B
+    ## 83           Brighton                             Atlantic Av      B
+    ## 84           Brighton                                    Av H      B
+    ## 85           Brighton                                    Av J      B
+    ## 86           Brighton                                    Av M      B
+    ## 87           Brighton                                    Av U      B
+    ## 88           Brighton                              Beverly Rd      B
+    ## 89           Brighton                          Brighton Beach      B
+    ## 90           Brighton                               Church Av      B
+    ## 91           Brighton                            Cortelyou Rd      B
+    ## 92           Brighton                           Kings Highway      B
+    ## 93           Brighton                                 Neck Rd      B
+    ## 94           Brighton                              Newkirk Av      B
+    ## 95           Brighton                           Ocean Parkway      Q
+    ## 96           Brighton                             Parkside Av      B
+    ## 97           Brighton                           Prospect Park      B
+    ## 98           Brighton                          Sheepshead Bay      B
+    ## 99           Brighton                            Stillwell Av      D
+    ## 100          Brighton                             West 8th St      F
+    ## 101          Broadway                                 23rd St      N
+    ## 102          Broadway                                 28th St      N
+    ## 103          Broadway                                 34th St      B
+    ## 104          Broadway                                 49th St      N
+    ## 105          Broadway                                 57th St      N
+    ## 106          Broadway                                  5th Av      N
+    ## 107          Broadway                                  8th St      N
+    ## 108          Broadway                           Canal St (UL)      J
+    ## 109          Broadway                               City Hall      R
+    ## 110          Broadway                            Cortlandt St      R
+    ## 111          Broadway                                Court St      R
+    ## 112          Broadway                             Lawrence St      A
+    ## 113          Broadway                            Lexington Av      N
+    ## 114          Broadway                               Prince St      N
+    ## 115          Broadway                               Rector St      R
+    ## 116          Broadway                    Times Square-42nd St      A
+    ## 117          Broadway                            Union Square      L
+    ## 118          Broadway                            Whitehall St      R
+    ## 119  Broadway Jamaica                       104th St-102nd St      J
+    ## 120  Broadway Jamaica                                111th St      J
+    ## 121  Broadway Jamaica                                121st St      J
+    ## 122  Broadway Jamaica                              Alabama Av      J
+    ## 123  Broadway Jamaica                             Chauncey St      J
+    ## 124  Broadway Jamaica                            Cleveland St      J
+    ## 125  Broadway Jamaica                             Crescent St      J
+    ## 126  Broadway Jamaica                           Cypress Hills      J
+    ## 127  Broadway Jamaica                    Elderts Lane-75th St      J
+    ## 128  Broadway Jamaica                             Flushing Av      J
+    ## 129  Broadway Jamaica                  Forest Parkway-85th St      J
+    ## 130  Broadway Jamaica                                Gates Av      J
+    ## 131  Broadway Jamaica                               Halsey St      J
+    ## 132  Broadway Jamaica                                Hewes St      J
+    ## 133  Broadway Jamaica                            Kosciusko St      J
+    ## 134  Broadway Jamaica                              Lorimer St      J
+    ## 135  Broadway Jamaica                                Marcy Av      J
+    ## 136  Broadway Jamaica                               Myrtle Av      J
+    ## 137  Broadway Jamaica                              Norwood Av      J
+    ## 138  Broadway Jamaica                           Van Siclen Av      J
+    ## 139  Broadway Jamaica                          Woodhaven Blvd      J
+    ## 140  Broadway-7th Ave                                103rd St      1
+    ## 141  Broadway-7th Ave            116th St-Columbia University      1
+    ## 142  Broadway-7th Ave                                125th St      1
+    ## 143  Broadway-7th Ave                   137th St-City College      1
+    ## 144  Broadway-7th Ave                                145th St      1
+    ## 145  Broadway-7th Ave                                 14th St      F
+    ## 146  Broadway-7th Ave                                157th St      1
+    ## 147  Broadway-7th Ave                                168th St      A
+    ## 148  Broadway-7th Ave                                181st St      1
+    ## 149  Broadway-7th Ave                                 18th St      1
+    ## 150  Broadway-7th Ave                                191st St      1
+    ## 151  Broadway-7th Ave                                207th St      1
+    ## 152  Broadway-7th Ave                                215th St      1
+    ## 153  Broadway-7th Ave                                231st St      1
+    ## 154  Broadway-7th Ave                                238th St      1
+    ## 155  Broadway-7th Ave                                 23rd St      1
+    ## 156  Broadway-7th Ave                                 28th St      1
+    ## 157  Broadway-7th Ave                                 34th St      1
+    ## 158  Broadway-7th Ave                                 50th St      1
+    ## 159  Broadway-7th Ave                 59th St-Columbus Circle      A
+    ## 160  Broadway-7th Ave                  66th St-Lincoln Center      1
+    ## 161  Broadway-7th Ave                                 72nd St      1
+    ## 162  Broadway-7th Ave                                 79th St      1
+    ## 163  Broadway-7th Ave                                 86th St      1
+    ## 164  Broadway-7th Ave                                 96th St      1
+    ## 165  Broadway-7th Ave                                Canal St      1
+    ## 166  Broadway-7th Ave              Cathedral Parkway-110th St      1
+    ## 167  Broadway-7th Ave                             Chambers St      1
+    ## 168  Broadway-7th Ave                          Christopher St      1
+    ## 169  Broadway-7th Ave                              Dyckman St      1
+    ## 170  Broadway-7th Ave                             Franklin St      1
+    ## 171  Broadway-7th Ave                              Houston St      1
+    ## 172  Broadway-7th Ave                    Marble Hill-225th St      1
+    ## 173  Broadway-7th Ave                               Rector St      1
+    ## 174  Broadway-7th Ave                             South Ferry      R
+    ## 175  Broadway-7th Ave                            Times Square      A
+    ## 176  Broadway-7th Ave             Van Cortlandt Park-242nd St      1
+    ## 177          Canarsie                                  1st Av      L
+    ## 178          Canarsie                                  3rd Av      L
+    ## 179          Canarsie                                  6th Av      F
+    ## 180          Canarsie                                  8th Av      A
+    ## 181          Canarsie                             Atlantic Av      L
+    ## 182          Canarsie                              Bedford Av      L
+    ## 183          Canarsie                             Bushwick Av      L
+    ## 184          Canarsie             Canarsie - Rockaway Parkway      L
+    ## 185          Canarsie                               DeKalb Av      L
+    ## 186          Canarsie                           East 105th St      L
+    ## 187          Canarsie                               Graham Av      L
+    ## 188          Canarsie                                Grand St      L
+    ## 189          Canarsie                               Halsey St      L
+    ## 190          Canarsie                            Jefferson St      L
+    ## 191          Canarsie                              Livonia Av      L
+    ## 192          Canarsie                              Lorimer St      G
+    ## 193          Canarsie                             Montrose Av      L
+    ## 194          Canarsie                               Morgan Av      L
+    ## 195          Canarsie                               Myrtle Av      L
+    ## 196          Canarsie                             New Lots Av      L
+    ## 197          Canarsie                               Sutter Av      L
+    ## 198          Canarsie                            Union Square      L
+    ## 199          Canarsie                               Wilson Av      L
+    ## 200             Clark                            Borough Hall      R
+    ## 201             Clark                                Clark St      2
+    ## 202             Clark                               Fulton St      A
+    ## 203             Clark                              Park Place      A
+    ## 204             Clark                                 Wall St      2
+    ## 205         Concourse                                155th St      B
+    ## 206         Concourse                                167th St      B
+    ## 207         Concourse                                170th St      B
+    ## 208         Concourse                           174-175th Sts      B
+    ## 209         Concourse                         182nd-183rd Sts      B
+    ## 210         Concourse                       Bedford Park Blvd      B
+    ## 211         Concourse                              Fordham Rd      B
+    ## 212         Concourse                          Kingsbridge Rd      B
+    ## 213         Concourse                        Norwood-205th St      D
+    ## 214         Concourse                              Tremont Av      B
+    ## 215         Concourse                 Yankee Stadium-161st St      B
+    ## 216      Coney Island                            Stillwell Av      D
+    ## 217      Coney Island                             West 8th St      F
+    ## 218         Crosstown                                 21st St      G
+    ## 219         Crosstown                    Bedford-Nostrand Avs      G
+    ## 220         Crosstown                                Broadway      G
+    ## 221         Crosstown                              Classon Av      G
+    ## 222         Crosstown                  Clinton-Washington Avs      G
+    ## 223         Crosstown                             Flushing Av      G
+    ## 224         Crosstown                               Fulton St      G
+    ## 225         Crosstown                           Greenpoint Av      G
+    ## 226         Crosstown           Long Island City-Court Square      G
+    ## 227         Crosstown                         Metropolitan Av      G
+    ## 228         Crosstown                   Myrtle-Willoughby Avs      G
+    ## 229         Crosstown                               Nassau Av      G
+    ## 230            Culver                                 18th Av      F
+    ## 231            Culver                                    Av I      F
+    ## 232            Culver                                    Av N      F
+    ## 233            Culver                                    Av P      F
+    ## 234            Culver                                    Av U      F
+    ## 235            Culver                                    Av X      F
+    ## 236            Culver                     Bay Parkway-22nd Av      F
+    ## 237            Culver                               Ditmas Av      F
+    ## 238            Culver                           Kings Highway      F
+    ## 239            Culver                   Neptune Av-Van Siclen      F
+    ## 240           Dyre Av                           Baychester Av      5
+    ## 241           Dyre Av                     Eastchester-Dyre Av      5
+    ## 242           Dyre Av                             Gun Hill Rd      5
+    ## 243           Dyre Av                             Morris Park      5
+    ## 244           Dyre Av                          Pelham Parkway      5
+    ## 245   Eastern Parkway                Atlantic Av-Barclays Ctr      B
+    ## 246   Eastern Parkway                               Bergen St      2
+    ## 247   Eastern Parkway         Eastern Parkway-Brooklyn Museum      2
+    ## 248   Eastern Parkway                             Franklin Av     FS
+    ## 249   Eastern Parkway                        Grand Army Plaza      2
+    ## 250   Eastern Parkway                                 Hoyt St      2
+    ## 251   Eastern Parkway                             Kingston Av      3
+    ## 252   Eastern Parkway                               Nevins St      2
+    ## 253   Eastern Parkway                             Nostrand Av      3
+    ## 254   Eastern Parkway                                Utica Av      3
+    ## 255          Flushing                                103rd St      7
+    ## 256          Flushing                                111th St      7
+    ## 257          Flushing                    45 Rd-Court House Sq      E
+    ## 258          Flushing                                  5th Av      B
+    ## 259          Flushing                 82nd St-Jackson Heights      7
+    ## 260          Flushing                        90th St Elmhurst      7
+    ## 261          Flushing                        Bliss St-46th St      7
+    ## 262          Flushing                        Broadway-74th St      E
+    ## 263          Flushing                         Fisk Av-69th St      7
+    ## 264          Flushing                        Flushing-Main St      7
+    ## 265          Flushing                   Grand Central-42nd St     GS
+    ## 266          Flushing                           Hunters Point      7
+    ## 267          Flushing                           Junction Blvd      7
+    ## 268          Flushing                      Lincoln Av-52nd St      7
+    ## 269          Flushing                       Lowery St-40th St      7
+    ## 270          Flushing                    Mets - Willets Point      7
+    ## 271          Flushing                        Queensboro Plaza      N
+    ## 272          Flushing                       Rawson St-33rd St      7
+    ## 273          Flushing                  Vernon Blvd-Jackson Av      7
+    ## 274          Flushing                     Woodside Av-61st St      7
+    ## 275          Franklin                         Botanic Gardens     FS
+    ## 276          Franklin                             Franklin Av      A
+    ## 277          Franklin                              Park Place     FS
+    ## 278            Fulton         Broadway Junction-East New York      A
+    ## 279            Fulton                Clinton & Washington Avs      C
+    ## 280            Fulton                               Euclid Av      A
+    ## 281            Fulton                             Franklin Av      A
+    ## 282            Fulton                     Hoyt & Schermerhorn      A
+    ## 283            Fulton                   Jay St - Borough Hall      A
+    ## 284            Fulton                         Kingston-Throop      A
+    ## 285            Fulton                            Lafayette Av      C
+    ## 286            Fulton                              Liberty Av      A
+    ## 287            Fulton                             Nostrand Av      A
+    ## 288            Fulton                                Ralph Av      A
+    ## 289            Fulton                             Rockaway Av      A
+    ## 290            Fulton                             Shepherd Av      A
+    ## 291            Fulton                                Utica Av      A
+    ## 292            Fulton                           Van Siclen Av      A
+    ## 293            Jerome                                138th St      4
+    ## 294            Jerome                149th St-Grand Concourse      2
+    ## 295            Jerome                                167th St      4
+    ## 296            Jerome                                170th St      4
+    ## 297            Jerome                                176th St      4
+    ## 298            Jerome                                183rd St      4
+    ## 299            Jerome        Bedford Park Blvd-Lehman College      4
+    ## 300            Jerome                             Burnside Av      4
+    ## 301            Jerome                              Fordham Rd      4
+    ## 302            Jerome                          Kingsbridge Rd      4
+    ## 303            Jerome                         Mosholu Parkway      4
+    ## 304            Jerome                              Mt Eden Av      4
+    ## 305            Jerome                                Woodlawn      4
+    ## 306            Jerome                 Yankee Stadium-161st St     B 
+    ## 307             Lenox             110th St-Central Park North      2
+    ## 308             Lenox                                116th St      2
+    ## 309             Lenox                                125th St      2
+    ## 310             Lenox                                135th St      2
+    ## 311             Lenox                                145th St      3
+    ## 312             Lenox                         Harlem-148th St      3
+    ## 313         Lexington                                103rd St      6
+    ## 314         Lexington                                110th St      6
+    ## 315         Lexington                                116th St      6
+    ## 316         Lexington                                125th St      4
+    ## 317         Lexington                    14th St-Union Square      L
+    ## 318         Lexington                                 23rd St      6
+    ## 319         Lexington                                 28th St      6
+    ## 320         Lexington                                 33rd St      6
+    ## 321         Lexington                                 51st St      E
+    ## 322         Lexington                                 59th St      N
+    ## 323         Lexington                  68th St-Hunter College      6
+    ## 324         Lexington                                 77th St      6
+    ## 325         Lexington                                 86th St      4
+    ## 326         Lexington                                 96th St      6
+    ## 327         Lexington                             Astor Place      6
+    ## 328         Lexington                             Bleecker St      B
+    ## 329         Lexington                            Borough Hall      R
+    ## 330         Lexington                           Bowling Green      4
+    ## 331         Lexington               Brooklyn Bridge-City Hall      J
+    ## 332         Lexington                                Canal St      J
+    ## 333         Lexington                               Fulton St      A
+    ## 334         Lexington                   Grand Central-42nd St     GS
+    ## 335         Lexington                               Spring St      6
+    ## 336         Lexington                                 Wall St      4
+    ## 337           Liberty                      104th St-Oxford Av      A
+    ## 338           Liberty                   111th St-Greenwood Av      A
+    ## 339           Liberty                       80th St-Hudson St      A
+    ## 340           Liberty                         88th St-Boyd Av      A
+    ## 341           Liberty                                Grant Av      A
+    ## 342           Liberty                           Lefferts Blvd      A
+    ## 343           Liberty                           Rockaway Blvd      A
+    ## 344            Myrtle                              Central Av      M
+    ## 345            Myrtle                               Forest Av      M
+    ## 346            Myrtle                           Fresh Pond Rd      M
+    ## 347            Myrtle                        Knickerbocker Av      M
+    ## 348            Myrtle                         Metropolitan Av      M
+    ## 349            Myrtle                               Seneca Av      M
+    ## 350            Nassau                                  Bowery      J
+    ## 351            Nassau                                Broad St      J
+    ## 352            Nassau                                Canal St      J
+    ## 353            Nassau                             Chambers St      J
+    ## 354            Nassau                                Essex St      F
+    ## 355            Nassau                               Fulton St      A
+    ## 356          New Lots                               Junius St      3
+    ## 357          New Lots                             New Lots Av      3
+    ## 358          New Lots                         Pennsylvania Av      3
+    ## 359          New Lots                             Rockaway Av      3
+    ## 360          New Lots                             Saratoga Av      3
+    ## 361          New Lots                               Sutter Av      3
+    ## 362          New Lots                           Van Siclen Av      3
+    ## 363          Nostrand                              Beverly Rd      2
+    ## 364          Nostrand                               Church Av      2
+    ## 365          Nostrand            Flatbush Av-Brooklyn College      2
+    ## 366          Nostrand                              Newkirk Av      2
+    ## 367          Nostrand                            President St      2
+    ## 368          Nostrand                             Sterling St      2
+    ## 369          Nostrand                             Winthrop St      2
+    ## 370            Pelham                        138th St-3rd Ave      6
+    ## 371            Pelham                                Brook Av      6
+    ## 372            Pelham                                Buhre Av      6
+    ## 373            Pelham                          Castle Hill Av      6
+    ## 374            Pelham                              Cypress Av      6
+    ## 375            Pelham              East 143rd St-St Mary's St      6
+    ## 376            Pelham                           East 149th St      6
+    ## 377            Pelham                                Elder Av      6
+    ## 378            Pelham                          Hunts Point Av      6
+    ## 379            Pelham                             Longwood Av      6
+    ## 380            Pelham                           Middletown Rd      6
+    ## 381            Pelham                Morrison Av-Soundview Av      6
+    ## 382            Pelham               Parkchester-East 177th St      6
+    ## 383            Pelham                         Pelham Bay Park      6
+    ## 384            Pelham                          St Lawrence Av      6
+    ## 385            Pelham      Westchester Square-East Tremont Av      6
+    ## 386            Pelham                             Whitlock Av      6
+    ## 387            Pelham                               Zerega Av      6
+    ## 388  Queens Boulevard                                169th St      F
+    ## 389  Queens Boulevard                          23rd St-Ely Av      E
+    ## 390  Queens Boulevard                                 36th St      M
+    ## 391  Queens Boulevard                                 46th St      M
+    ## 392  Queens Boulevard                          5th Av-53rd St      E
+    ## 393  Queens Boulevard                    63rd Drive-Rego Park      M
+    ## 394  Queens Boulevard                                 65th St      M
+    ## 395  Queens Boulevard                                 67th Av      M
+    ## 396  Queens Boulevard                                 75th Av      E
+    ## 397  Queens Boulevard                                  7th Av      B
+    ## 398  Queens Boulevard                 Briarwood-Van Wyck Blvd      F
+    ## 399  Queens Boulevard                             Elmhurst Av      M
+    ## 400  Queens Boulevard                    Forest Hills-71st Av      E
+    ## 401  Queens Boulevard                    Forest Hills-71st Av      e
+    ## 402  Queens Boulevard                        Grand Av-Newtown      M
+    ## 403  Queens Boulevard           Jackson Heights-Roosevelt Ave      E
+    ## 404  Queens Boulevard                        Jamaica-179th St      F
+    ## 405  Queens Boulevard              Kew Gardens-Union Turnpike      E
+    ## 406  Queens Boulevard                    Lexington Av-53rd St      E
+    ## 407  Queens Boulevard                           Northern Blvd      M
+    ## 408  Queens Boulevard                            Parsons Blvd      F
+    ## 409  Queens Boulevard                            Queens Plaza      E
+    ## 410  Queens Boulevard                             Steinway St      M
+    ## 411  Queens Boulevard                            Sutphin Blvd      F
+    ## 412  Queens Boulevard                          Woodhaven Blvd      M
+    ## 413          Rockaway                      Aqueduct Racetrack      A
+    ## 414          Rockaway               Aqueduct-North Conduit Av      A
+    ## 415          Rockaway                          Beach 105th St      H
+    ## 416          Rockaway                           Beach 25th St      A
+    ## 417          Rockaway                           Beach 36th St      A
+    ## 418          Rockaway                           Beach 44th St      A
+    ## 419          Rockaway                           Beach 60th St      A
+    ## 420          Rockaway                           Beach 67th St      A
+    ## 421          Rockaway                           Beach 90th St      H
+    ## 422          Rockaway                           Beach 98th St      H
+    ## 423          Rockaway                           Broad Channel      A
+    ## 424          Rockaway                    Far Rockaway-Mott Av      A
+    ## 425          Rockaway                            Howard Beach      A
+    ## 426          Rockaway               Rockaway Park-Beach 116th      H
+    ## 427         Sea Beach                                 18th Av      N
+    ## 428         Sea Beach                                 20th Av      N
+    ## 429         Sea Beach                                 86th St      N
+    ## 430         Sea Beach                                  8th Av      N
+    ## 431         Sea Beach                                    Av U      N
+    ## 432         Sea Beach                     Bay Parkway-22nd Av      N
+    ## 433         Sea Beach                   Fort Hamilton Parkway      N
+    ## 434         Sea Beach                           Kings Highway      N
+    ## 435         Sea Beach                          New Utrecht Av      D
+    ## 436          West End                                 18th Av      D
+    ## 437          West End                                 20th Av      D
+    ## 438          West End                                 25th Av      D
+    ## 439          West End                                 50th St      D
+    ## 440          West End                                 55th St      D
+    ## 441          West End                                 62nd St      D
+    ## 442          West End                                 71st St      D
+    ## 443          West End                                 79th St      D
+    ## 444          West End                                  9th Av      D
+    ## 445          West End                             Bay 50th St      D
+    ## 446          West End                             Bay Parkway      D
+    ## 447          West End                   Fort Hamilton Parkway      D
+    ## 448 White Plains Road                         149th St-3rd Av      2
+    ## 449 White Plains Road                                174th St      2
+    ## 450 White Plains Road                                219th St      2
+    ## 451 White Plains Road                                225th St      2
+    ## 452 White Plains Road                                233rd St      2
+    ## 453 White Plains Road                      238th St-Nereid Av      2
+    ## 454 White Plains Road                             Allerton Av      2
+    ## 455 White Plains Road                         Bronx Park East      2
+    ## 456 White Plains Road                                Burke Av      2
+    ## 457 White Plains Road                           East 180th St      2
+    ## 458 White Plains Road           East Tremont Av-West Farms Sq      2
+    ## 459 White Plains Road                              Freeman St      2
+    ## 460 White Plains Road                             Gun Hill Rd      2
+    ## 461 White Plains Road                            Intervale Av      2
+    ## 462 White Plains Road                              Jackson Av      2
+    ## 463 White Plains Road                          Pelham Parkway      2
+    ## 464 White Plains Road                             Prospect Av      2
+    ## 465 White Plains Road                              Simpson St      2
+    ## 466 White Plains Road                      Wakefield-241st St      2
+    ## 467          Flushing                      34 St Hudson Yards      7
+    ##     route2 route3 route4 route5 route6 route7 route8 route9 route10
+    ## 1                                                 NA     NA      NA
+    ## 2        R                                        NA     NA      NA
+    ## 3                                                 NA     NA      NA
+    ## 4                                                 NA     NA      NA
+    ## 5        R                                        NA     NA      NA
+    ## 6                                                 NA     NA      NA
+    ## 7                                                 NA     NA      NA
+    ## 8                                                 NA     NA      NA
+    ## 9        G      R                                 NA     NA      NA
+    ## 10       Q      D      N      R      2      3      4      5      NA
+    ## 11                                                NA     NA      NA
+    ## 12       Q      R                                 NA     NA      NA
+    ## 13       Q      D      N      R      2      3      4      5      NA
+    ## 14                                                NA     NA      NA
+    ## 15                                                NA     NA      NA
+    ## 16       4      5      6      7                   NA     NA      NA
+    ## 17       C      E      N      Q      R     GS      1      2       3
+    ## 18       L      M      1      2      3            NA     NA      NA
+    ## 19       M                                        NA     NA      NA
+    ## 20                                                NA     NA      NA
+    ## 21       D      F      M      N      Q      R     NA     NA      NA
+    ## 22       D      F      M      7                   NA     NA      NA
+    ## 23       D      F      M                          NA     NA      NA
+    ## 24       D      F      M      7                   NA     NA      NA
+    ## 25                                                NA     NA      NA
+    ## 26                                                NA     NA      NA
+    ## 27                                                NA     NA      NA
+    ## 28       G                                        NA     NA      NA
+    ## 29       D      F      M      6                   NA     NA      NA
+    ## 30       G                                        NA     NA      NA
+    ## 31                                                NA     NA      NA
+    ## 32       J      M      Z                          NA     NA      NA
+    ## 33                                                NA     NA      NA
+    ## 34                                                NA     NA      NA
+    ## 35       D                                        NA     NA      NA
+    ## 36                                                NA     NA      NA
+    ## 37       G      R                                 NA     NA      NA
+    ## 38                                                NA     NA      NA
+    ## 39                                                NA     NA      NA
+    ## 40                                                NA     NA      NA
+    ## 41                                                NA     NA      NA
+    ## 42       C                                        NA     NA      NA
+    ## 43       C                                        NA     NA      NA
+    ## 44       B      C      D                          NA     NA      NA
+    ## 45       C                                        NA     NA      NA
+    ## 46       B      C      D                          NA     NA      NA
+    ## 47       C      E      L                          NA     NA      NA
+    ## 48                                                NA     NA      NA
+    ## 49                                                NA     NA      NA
+    ## 50       C                                        NA     NA      NA
+    ## 51                                                NA     NA      NA
+    ## 52                                                NA     NA      NA
+    ## 53                                                NA     NA      NA
+    ## 54       E                                        NA     NA      NA
+    ## 55       C      E                                 NA     NA      NA
+    ## 56       C      E      N      Q      R      S      1      2       3
+    ## 57       E                                        NA     NA      NA
+    ## 58       B      C      D      1                   NA     NA      NA
+    ## 59       C                                        NA     NA      NA
+    ## 60       C                                        NA     NA      NA
+    ## 61       C                                        NA     NA      NA
+    ## 62       C                                        NA     NA      NA
+    ## 63       C      J      Z      2      3      4      5     NA      NA
+    ## 64       C      E                                 NA     NA      NA
+    ## 65       C                                        NA     NA      NA
+    ## 66       C      E      2      3                   NA     NA      NA
+    ## 67                                                NA     NA      NA
+    ## 68       C      J      Z      2      3      4      5     NA      NA
+    ## 69                                                NA     NA      NA
+    ## 70       E                                        NA     NA      NA
+    ## 71       B      C      D      E      F      M     NA     NA      NA
+    ## 72       C      E      2      3                   NA     NA      NA
+    ## 73                                                NA     NA      NA
+    ## 74       J      Z                                 NA     NA      NA
+    ## 75       J      Z                                 NA     NA      NA
+    ## 76       Q                                        NA     NA      NA
+    ## 77       Q                                        NA     NA      NA
+    ## 78       Q                                        NA     NA      NA
+    ## 79       Q                                        NA     NA      NA
+    ## 80       Q                                        NA     NA      NA
+    ## 81       Q                                        NA     NA      NA
+    ## 82       Q                                        NA     NA      NA
+    ## 83       Q      D      N      R      2      3      4      5      NA
+    ## 84       Q                                        NA     NA      NA
+    ## 85       Q                                        NA     NA      NA
+    ## 86       Q                                        NA     NA      NA
+    ## 87       Q                                        NA     NA      NA
+    ## 88       Q                                        NA     NA      NA
+    ## 89       Q                                        NA     NA      NA
+    ## 90       Q                                        NA     NA      NA
+    ## 91       Q                                        NA     NA      NA
+    ## 92       Q                                        NA     NA      NA
+    ## 93       Q                                        NA     NA      NA
+    ## 94       Q                                        NA     NA      NA
+    ## 95                                                NA     NA      NA
+    ## 96       Q                                        NA     NA      NA
+    ## 97       Q     FS                                 NA     NA      NA
+    ## 98       Q                                        NA     NA      NA
+    ## 99       F      N      Q                          NA     NA      NA
+    ## 100      Q                                        NA     NA      NA
+    ## 101      R                                        NA     NA      NA
+    ## 102      R                                        NA     NA      NA
+    ## 103      D      F      M      N      Q      R     NA     NA      NA
+    ## 104      Q      R                                 NA     NA      NA
+    ## 105      Q      R                                 NA     NA      NA
+    ## 106      Q      R                                 NA     NA      NA
+    ## 107      R                                        NA     NA      NA
+    ## 108      N      Q      R      Z      6            NA     NA      NA
+    ## 109                                               NA     NA      NA
+    ## 110                                               NA     NA      NA
+    ## 111      2      3      4      5                   NA     NA      NA
+    ## 112      C      F      R                          NA     NA      NA
+    ## 113      Q      R      4      5      6            NA     NA      NA
+    ## 114      R                                        NA     NA      NA
+    ## 115                                               NA     NA      NA
+    ## 116      C      E      N      Q      R      S      1      2       3
+    ## 117      N      Q      R      4      5      6     NA     NA      NA
+    ## 118      1                                        NA     NA      NA
+    ## 119      Z                                        NA     NA      NA
+    ## 120                                               NA     NA      NA
+    ## 121      Z                                        NA     NA      NA
+    ## 122                                               NA     NA      NA
+    ## 123      Z                                        NA     NA      NA
+    ## 124                                               NA     NA      NA
+    ## 125      Z                                        NA     NA      NA
+    ## 126                                               NA     NA      NA
+    ## 127      Z                                        NA     NA      NA
+    ## 128      M                                        NA     NA      NA
+    ## 129                                               NA     NA      NA
+    ## 130      Z                                        NA     NA      NA
+    ## 131                                               NA     NA      NA
+    ## 132      M                                        NA     NA      NA
+    ## 133                                               NA     NA      NA
+    ## 134      M                                        NA     NA      NA
+    ## 135      M      Z                                 NA     NA      NA
+    ## 136      M      Z                                 NA     NA      NA
+    ## 137      Z                                        NA     NA      NA
+    ## 138      Z                                        NA     NA      NA
+    ## 139      Z                                        NA     NA      NA
+    ## 140                                               NA     NA      NA
+    ## 141                                               NA     NA      NA
+    ## 142                                               NA     NA      NA
+    ## 143                                               NA     NA      NA
+    ## 144                                               NA     NA      NA
+    ## 145      L      M      1      2      3            NA     NA      NA
+    ## 146                                               NA     NA      NA
+    ## 147      C      1                                 NA     NA      NA
+    ## 148                                               NA     NA      NA
+    ## 149                                               NA     NA      NA
+    ## 150                                               NA     NA      NA
+    ## 151                                               NA     NA      NA
+    ## 152                                               NA     NA      NA
+    ## 153                                               NA     NA      NA
+    ## 154                                               NA     NA      NA
+    ## 155                                               NA     NA      NA
+    ## 156                                               NA     NA      NA
+    ## 157      2      3                                 NA     NA      NA
+    ## 158                                               NA     NA      NA
+    ## 159      B      C      D      1                   NA     NA      NA
+    ## 160                                               NA     NA      NA
+    ## 161      2      3                                 NA     NA      NA
+    ## 162                                               NA     NA      NA
+    ## 163                                               NA     NA      NA
+    ## 164      2      3                                 NA     NA      NA
+    ## 165                                               NA     NA      NA
+    ## 166                                               NA     NA      NA
+    ## 167      2      3                                 NA     NA      NA
+    ## 168                                               NA     NA      NA
+    ## 169                                               NA     NA      NA
+    ## 170                                               NA     NA      NA
+    ## 171                                               NA     NA      NA
+    ## 172                                               NA     NA      NA
+    ## 173                                               NA     NA      NA
+    ## 174      1                                        NA     NA      NA
+    ## 175      C      E      N      Q      R      S      1      2       3
+    ## 176                                               NA     NA      NA
+    ## 177                                               NA     NA      NA
+    ## 178                                               NA     NA      NA
+    ## 179      L      M      1      2      3            NA     NA      NA
+    ## 180      C      E      L                          NA     NA      NA
+    ## 181                                               NA     NA      NA
+    ## 182                                               NA     NA      NA
+    ## 183                                               NA     NA      NA
+    ## 184                                               NA     NA      NA
+    ## 185                                               NA     NA      NA
+    ## 186                                               NA     NA      NA
+    ## 187                                               NA     NA      NA
+    ## 188                                               NA     NA      NA
+    ## 189                                               NA     NA      NA
+    ## 190                                               NA     NA      NA
+    ## 191                                               NA     NA      NA
+    ## 192      L                                        NA     NA      NA
+    ## 193                                               NA     NA      NA
+    ## 194                                               NA     NA      NA
+    ## 195      M                                        NA     NA      NA
+    ## 196                                               NA     NA      NA
+    ## 197                                               NA     NA      NA
+    ## 198      N      Q      R      4      5      6     NA     NA      NA
+    ## 199                                               NA     NA      NA
+    ## 200      2      3      4      5                   NA     NA      NA
+    ## 201      3                                        NA     NA      NA
+    ## 202      C      J      Z      2      3      4      5     NA      NA
+    ## 203      C      E      1      2      3            NA     NA      NA
+    ## 204      3                                        NA     NA      NA
+    ## 205      D                                        NA     NA      NA
+    ## 206      D                                        NA     NA      NA
+    ## 207      D                                        NA     NA      NA
+    ## 208      D                                        NA     NA      NA
+    ## 209      D                                        NA     NA      NA
+    ## 210      D                                        NA     NA      NA
+    ## 211      D                                        NA     NA      NA
+    ## 212      D                                        NA     NA      NA
+    ## 213                                               NA     NA      NA
+    ## 214      D                                        NA     NA      NA
+    ## 215      D      4                                 NA     NA      NA
+    ## 216      F      N      Q                          NA     NA      NA
+    ## 217      Q                                        NA     NA      NA
+    ## 218                                               NA     NA      NA
+    ## 219                                               NA     NA      NA
+    ## 220                                               NA     NA      NA
+    ## 221                                               NA     NA      NA
+    ## 222                                               NA     NA      NA
+    ## 223                                               NA     NA      NA
+    ## 224                                               NA     NA      NA
+    ## 225                                               NA     NA      NA
+    ## 226                                               NA     NA      NA
+    ## 227      L                                        NA     NA      NA
+    ## 228                                               NA     NA      NA
+    ## 229                                               NA     NA      NA
+    ## 230                                               NA     NA      NA
+    ## 231                                               NA     NA      NA
+    ## 232                                               NA     NA      NA
+    ## 233                                               NA     NA      NA
+    ## 234                                               NA     NA      NA
+    ## 235                                               NA     NA      NA
+    ## 236                                               NA     NA      NA
+    ## 237                                               NA     NA      NA
+    ## 238                                               NA     NA      NA
+    ## 239                                               NA     NA      NA
+    ## 240                                               NA     NA      NA
+    ## 241                                               NA     NA      NA
+    ## 242                                               NA     NA      NA
+    ## 243                                               NA     NA      NA
+    ## 244                                               NA     NA      NA
+    ## 245      D      N      Q      R      2      3      4      5      NA
+    ## 246      3                                        NA     NA      NA
+    ## 247      3                                        NA     NA      NA
+    ## 248      2      3      4      5                   NA     NA      NA
+    ## 249      3                                        NA     NA      NA
+    ## 250      3                                        NA     NA      NA
+    ## 251                                               NA     NA      NA
+    ## 252      3      4      5                          NA     NA      NA
+    ## 253                                               NA     NA      NA
+    ## 254      4                                        NA     NA      NA
+    ## 255                                               NA     NA      NA
+    ## 256                                               NA     NA      NA
+    ## 257      G      M      7                          NA     NA      NA
+    ## 258      D      F      M      7                   NA     NA      NA
+    ## 259                                               NA     NA      NA
+    ## 260                                               NA     NA      NA
+    ## 261                                               NA     NA      NA
+    ## 262      F      M      R      7                   NA     NA      NA
+    ## 263                                               NA     NA      NA
+    ## 264                                               NA     NA      NA
+    ## 265      4      5      6      7                   NA     NA      NA
+    ## 266                                               NA     NA      NA
+    ## 267                                               NA     NA      NA
+    ## 268                                               NA     NA      NA
+    ## 269                                               NA     NA      NA
+    ## 270                                               NA     NA      NA
+    ## 271      Q      7                                 NA     NA      NA
+    ## 272                                               NA     NA      NA
+    ## 273                                               NA     NA      NA
+    ## 274                                               NA     NA      NA
+    ## 275      2      3      4      5                   NA     NA      NA
+    ## 276     FS                                        NA     NA      NA
+    ## 277                                               NA     NA      NA
+    ## 278      C      J      L                          NA     NA      NA
+    ## 279                                               NA     NA      NA
+    ## 280      C                                        NA     NA      NA
+    ## 281      C     FS                                 NA     NA      NA
+    ## 282      C      G                                 NA     NA      NA
+    ## 283      C      F      R                          NA     NA      NA
+    ## 284      C                                        NA     NA      NA
+    ## 285                                               NA     NA      NA
+    ## 286      C                                        NA     NA      NA
+    ## 287      C                                        NA     NA      NA
+    ## 288      C                                        NA     NA      NA
+    ## 289      C                                        NA     NA      NA
+    ## 290      C                                        NA     NA      NA
+    ## 291      C                                        NA     NA      NA
+    ## 292      C                                        NA     NA      NA
+    ## 293      5                                        NA     NA      NA
+    ## 294      4      5                                 NA     NA      NA
+    ## 295                                               NA     NA      NA
+    ## 296                                               NA     NA      NA
+    ## 297                                               NA     NA      NA
+    ## 298                                               NA     NA      NA
+    ## 299                                               NA     NA      NA
+    ## 300                                               NA     NA      NA
+    ## 301                                               NA     NA      NA
+    ## 302                                               NA     NA      NA
+    ## 303                                               NA     NA      NA
+    ## 304                                               NA     NA      NA
+    ## 305                                               NA     NA      NA
+    ## 306      D      4                                 NA     NA      NA
+    ## 307      3                                        NA     NA      NA
+    ## 308      3                                        NA     NA      NA
+    ## 309      3                                        NA     NA      NA
+    ## 310      3                                        NA     NA      NA
+    ## 311                                               NA     NA      NA
+    ## 312                                               NA     NA      NA
+    ## 313                                               NA     NA      NA
+    ## 314                                               NA     NA      NA
+    ## 315                                               NA     NA      NA
+    ## 316      5      6                                 NA     NA      NA
+    ## 317      N      Q      R      4      5      6     NA     NA      NA
+    ## 318                                               NA     NA      NA
+    ## 319                                               NA     NA      NA
+    ## 320                                               NA     NA      NA
+    ## 321      M      6                                 NA     NA      NA
+    ## 322      Q      R      4      5      6            NA     NA      NA
+    ## 323                                               NA     NA      NA
+    ## 324                                               NA     NA      NA
+    ## 325      5      6                                 NA     NA      NA
+    ## 326                                               NA     NA      NA
+    ## 327                                               NA     NA      NA
+    ## 328      D      F      M      6                   NA     NA      NA
+    ## 329      2      3      4      5                   NA     NA      NA
+    ## 330      5                                        NA     NA      NA
+    ## 331      Z      4      5      6                   NA     NA      NA
+    ## 332      N      Q      R      Z      6            NA     NA      NA
+    ## 333      C      J      Z      2      3      4      5     NA      NA
+    ## 334      4      5      6      7                   NA     NA      NA
+    ## 335                                               NA     NA      NA
+    ## 336      5                                        NA     NA      NA
+    ## 337                                               NA     NA      NA
+    ## 338                                               NA     NA      NA
+    ## 339                                               NA     NA      NA
+    ## 340                                               NA     NA      NA
+    ## 341                                               NA     NA      NA
+    ## 342                                               NA     NA      NA
+    ## 343                                               NA     NA      NA
+    ## 344                                               NA     NA      NA
+    ## 345                                               NA     NA      NA
+    ## 346                                               NA     NA      NA
+    ## 347                                               NA     NA      NA
+    ## 348                                               NA     NA      NA
+    ## 349                                               NA     NA      NA
+    ## 350      Z                                        NA     NA      NA
+    ## 351      Z                                        NA     NA      NA
+    ## 352      N      Q      R      Z      6            NA     NA      NA
+    ## 353      Z      4      5      6                   NA     NA      NA
+    ## 354      J      M      Z                          NA     NA      NA
+    ## 355      C      J      Z      2      3      4      5     NA      NA
+    ## 356                                               NA     NA      NA
+    ## 357                                               NA     NA      NA
+    ## 358                                               NA     NA      NA
+    ## 359                                               NA     NA      NA
+    ## 360                                               NA     NA      NA
+    ## 361                                               NA     NA      NA
+    ## 362                                               NA     NA      NA
+    ## 363      5                                        NA     NA      NA
+    ## 364      5                                        NA     NA      NA
+    ## 365      5                                        NA     NA      NA
+    ## 366      5                                        NA     NA      NA
+    ## 367      5                                        NA     NA      NA
+    ## 368      5                                        NA     NA      NA
+    ## 369      5                                        NA     NA      NA
+    ## 370                                               NA     NA      NA
+    ## 371                                               NA     NA      NA
+    ## 372                                               NA     NA      NA
+    ## 373                                               NA     NA      NA
+    ## 374                                               NA     NA      NA
+    ## 375                                               NA     NA      NA
+    ## 376                                               NA     NA      NA
+    ## 377                                               NA     NA      NA
+    ## 378                                               NA     NA      NA
+    ## 379                                               NA     NA      NA
+    ## 380                                               NA     NA      NA
+    ## 381                                               NA     NA      NA
+    ## 382                                               NA     NA      NA
+    ## 383                                               NA     NA      NA
+    ## 384                                               NA     NA      NA
+    ## 385                                               NA     NA      NA
+    ## 386                                               NA     NA      NA
+    ## 387                                               NA     NA      NA
+    ## 388                                               NA     NA      NA
+    ## 389      G      M      7                          NA     NA      NA
+    ## 390      R                                        NA     NA      NA
+    ## 391      R                                        NA     NA      NA
+    ## 392      M                                        NA     NA      NA
+    ## 393      R                                        NA     NA      NA
+    ## 394      R                                        NA     NA      NA
+    ## 395      R                                        NA     NA      NA
+    ## 396      F                                        NA     NA      NA
+    ## 397      D      E                                 NA     NA      NA
+    ## 398                                               NA     NA      NA
+    ## 399      R                                        NA     NA      NA
+    ## 400      F      M      R                          NA     NA      NA
+    ## 401      F      M      R                          NA     NA      NA
+    ## 402      R                                        NA     NA      NA
+    ## 403      F      M      R      7                   NA     NA      NA
+    ## 404                                               NA     NA      NA
+    ## 405      F                                        NA     NA      NA
+    ## 406      M      6                                 NA     NA      NA
+    ## 407      R                                        NA     NA      NA
+    ## 408                                               NA     NA      NA
+    ## 409      M      R                                 NA     NA      NA
+    ## 410      R                                        NA     NA      NA
+    ## 411                                               NA     NA      NA
+    ## 412      R                                        NA     NA      NA
+    ## 413                                               NA     NA      NA
+    ## 414                                               NA     NA      NA
+    ## 415                                               NA     NA      NA
+    ## 416                                               NA     NA      NA
+    ## 417                                               NA     NA      NA
+    ## 418                                               NA     NA      NA
+    ## 419                                               NA     NA      NA
+    ## 420                                               NA     NA      NA
+    ## 421                                               NA     NA      NA
+    ## 422                                               NA     NA      NA
+    ## 423      H                                        NA     NA      NA
+    ## 424                                               NA     NA      NA
+    ## 425                                               NA     NA      NA
+    ## 426                                               NA     NA      NA
+    ## 427                                               NA     NA      NA
+    ## 428                                               NA     NA      NA
+    ## 429                                               NA     NA      NA
+    ## 430                                               NA     NA      NA
+    ## 431                                               NA     NA      NA
+    ## 432                                               NA     NA      NA
+    ## 433                                               NA     NA      NA
+    ## 434                                               NA     NA      NA
+    ## 435      N                                        NA     NA      NA
+    ## 436                                               NA     NA      NA
+    ## 437                                               NA     NA      NA
+    ## 438                                               NA     NA      NA
+    ## 439                                               NA     NA      NA
+    ## 440                                               NA     NA      NA
+    ## 441      N                                        NA     NA      NA
+    ## 442                                               NA     NA      NA
+    ## 443                                               NA     NA      NA
+    ## 444                                               NA     NA      NA
+    ## 445                                               NA     NA      NA
+    ## 446                                               NA     NA      NA
+    ## 447                                               NA     NA      NA
+    ## 448      5                                        NA     NA      NA
+    ## 449      5                                        NA     NA      NA
+    ## 450      5                                        NA     NA      NA
+    ## 451      5                                        NA     NA      NA
+    ## 452      5                                        NA     NA      NA
+    ## 453      5                                        NA     NA      NA
+    ## 454      5                                        NA     NA      NA
+    ## 455      5                                        NA     NA      NA
+    ## 456      5                                        NA     NA      NA
+    ## 457      5                                        NA     NA      NA
+    ## 458      5                                        NA     NA      NA
+    ## 459      5                                        NA     NA      NA
+    ## 460      5                                        NA     NA      NA
+    ## 461      5                                        NA     NA      NA
+    ## 462      5                                        NA     NA      NA
+    ## 463      5                                        NA     NA      NA
+    ## 464      5                                        NA     NA      NA
+    ## 465      5                                        NA     NA      NA
+    ## 466      5                                        NA     NA      NA
+    ## 467                                               NA     NA      NA
+    ##     route11
+    ## 1        NA
+    ## 2        NA
+    ## 3        NA
+    ## 4        NA
+    ## 5        NA
+    ## 6        NA
+    ## 7        NA
+    ## 8        NA
+    ## 9        NA
+    ## 10       NA
+    ## 11       NA
+    ## 12       NA
+    ## 13       NA
+    ## 14       NA
+    ## 15       NA
+    ## 16       NA
+    ## 17        7
+    ## 18       NA
+    ## 19       NA
+    ## 20       NA
+    ## 21       NA
+    ## 22       NA
+    ## 23       NA
+    ## 24       NA
+    ## 25       NA
+    ## 26       NA
+    ## 27       NA
+    ## 28       NA
+    ## 29       NA
+    ## 30       NA
+    ## 31       NA
+    ## 32       NA
+    ## 33       NA
+    ## 34       NA
+    ## 35       NA
+    ## 36       NA
+    ## 37       NA
+    ## 38       NA
+    ## 39       NA
+    ## 40       NA
+    ## 41       NA
+    ## 42       NA
+    ## 43       NA
+    ## 44       NA
+    ## 45       NA
+    ## 46       NA
+    ## 47       NA
+    ## 48       NA
+    ## 49       NA
+    ## 50       NA
+    ## 51       NA
+    ## 52       NA
+    ## 53       NA
+    ## 54       NA
+    ## 55       NA
+    ## 56        7
+    ## 57       NA
+    ## 58       NA
+    ## 59       NA
+    ## 60       NA
+    ## 61       NA
+    ## 62       NA
+    ## 63       NA
+    ## 64       NA
+    ## 65       NA
+    ## 66       NA
+    ## 67       NA
+    ## 68       NA
+    ## 69       NA
+    ## 70       NA
+    ## 71       NA
+    ## 72       NA
+    ## 73       NA
+    ## 74       NA
+    ## 75       NA
+    ## 76       NA
+    ## 77       NA
+    ## 78       NA
+    ## 79       NA
+    ## 80       NA
+    ## 81       NA
+    ## 82       NA
+    ## 83       NA
+    ## 84       NA
+    ## 85       NA
+    ## 86       NA
+    ## 87       NA
+    ## 88       NA
+    ## 89       NA
+    ## 90       NA
+    ## 91       NA
+    ## 92       NA
+    ## 93       NA
+    ## 94       NA
+    ## 95       NA
+    ## 96       NA
+    ## 97       NA
+    ## 98       NA
+    ## 99       NA
+    ## 100      NA
+    ## 101      NA
+    ## 102      NA
+    ## 103      NA
+    ## 104      NA
+    ## 105      NA
+    ## 106      NA
+    ## 107      NA
+    ## 108      NA
+    ## 109      NA
+    ## 110      NA
+    ## 111      NA
+    ## 112      NA
+    ## 113      NA
+    ## 114      NA
+    ## 115      NA
+    ## 116       7
+    ## 117      NA
+    ## 118      NA
+    ## 119      NA
+    ## 120      NA
+    ## 121      NA
+    ## 122      NA
+    ## 123      NA
+    ## 124      NA
+    ## 125      NA
+    ## 126      NA
+    ## 127      NA
+    ## 128      NA
+    ## 129      NA
+    ## 130      NA
+    ## 131      NA
+    ## 132      NA
+    ## 133      NA
+    ## 134      NA
+    ## 135      NA
+    ## 136      NA
+    ## 137      NA
+    ## 138      NA
+    ## 139      NA
+    ## 140      NA
+    ## 141      NA
+    ## 142      NA
+    ## 143      NA
+    ## 144      NA
+    ## 145      NA
+    ## 146      NA
+    ## 147      NA
+    ## 148      NA
+    ## 149      NA
+    ## 150      NA
+    ## 151      NA
+    ## 152      NA
+    ## 153      NA
+    ## 154      NA
+    ## 155      NA
+    ## 156      NA
+    ## 157      NA
+    ## 158      NA
+    ## 159      NA
+    ## 160      NA
+    ## 161      NA
+    ## 162      NA
+    ## 163      NA
+    ## 164      NA
+    ## 165      NA
+    ## 166      NA
+    ## 167      NA
+    ## 168      NA
+    ## 169      NA
+    ## 170      NA
+    ## 171      NA
+    ## 172      NA
+    ## 173      NA
+    ## 174      NA
+    ## 175       7
+    ## 176      NA
+    ## 177      NA
+    ## 178      NA
+    ## 179      NA
+    ## 180      NA
+    ## 181      NA
+    ## 182      NA
+    ## 183      NA
+    ## 184      NA
+    ## 185      NA
+    ## 186      NA
+    ## 187      NA
+    ## 188      NA
+    ## 189      NA
+    ## 190      NA
+    ## 191      NA
+    ## 192      NA
+    ## 193      NA
+    ## 194      NA
+    ## 195      NA
+    ## 196      NA
+    ## 197      NA
+    ## 198      NA
+    ## 199      NA
+    ## 200      NA
+    ## 201      NA
+    ## 202      NA
+    ## 203      NA
+    ## 204      NA
+    ## 205      NA
+    ## 206      NA
+    ## 207      NA
+    ## 208      NA
+    ## 209      NA
+    ## 210      NA
+    ## 211      NA
+    ## 212      NA
+    ## 213      NA
+    ## 214      NA
+    ## 215      NA
+    ## 216      NA
+    ## 217      NA
+    ## 218      NA
+    ## 219      NA
+    ## 220      NA
+    ## 221      NA
+    ## 222      NA
+    ## 223      NA
+    ## 224      NA
+    ## 225      NA
+    ## 226      NA
+    ## 227      NA
+    ## 228      NA
+    ## 229      NA
+    ## 230      NA
+    ## 231      NA
+    ## 232      NA
+    ## 233      NA
+    ## 234      NA
+    ## 235      NA
+    ## 236      NA
+    ## 237      NA
+    ## 238      NA
+    ## 239      NA
+    ## 240      NA
+    ## 241      NA
+    ## 242      NA
+    ## 243      NA
+    ## 244      NA
+    ## 245      NA
+    ## 246      NA
+    ## 247      NA
+    ## 248      NA
+    ## 249      NA
+    ## 250      NA
+    ## 251      NA
+    ## 252      NA
+    ## 253      NA
+    ## 254      NA
+    ## 255      NA
+    ## 256      NA
+    ## 257      NA
+    ## 258      NA
+    ## 259      NA
+    ## 260      NA
+    ## 261      NA
+    ## 262      NA
+    ## 263      NA
+    ## 264      NA
+    ## 265      NA
+    ## 266      NA
+    ## 267      NA
+    ## 268      NA
+    ## 269      NA
+    ## 270      NA
+    ## 271      NA
+    ## 272      NA
+    ## 273      NA
+    ## 274      NA
+    ## 275      NA
+    ## 276      NA
+    ## 277      NA
+    ## 278      NA
+    ## 279      NA
+    ## 280      NA
+    ## 281      NA
+    ## 282      NA
+    ## 283      NA
+    ## 284      NA
+    ## 285      NA
+    ## 286      NA
+    ## 287      NA
+    ## 288      NA
+    ## 289      NA
+    ## 290      NA
+    ## 291      NA
+    ## 292      NA
+    ## 293      NA
+    ## 294      NA
+    ## 295      NA
+    ## 296      NA
+    ## 297      NA
+    ## 298      NA
+    ## 299      NA
+    ## 300      NA
+    ## 301      NA
+    ## 302      NA
+    ## 303      NA
+    ## 304      NA
+    ## 305      NA
+    ## 306      NA
+    ## 307      NA
+    ## 308      NA
+    ## 309      NA
+    ## 310      NA
+    ## 311      NA
+    ## 312      NA
+    ## 313      NA
+    ## 314      NA
+    ## 315      NA
+    ## 316      NA
+    ## 317      NA
+    ## 318      NA
+    ## 319      NA
+    ## 320      NA
+    ## 321      NA
+    ## 322      NA
+    ## 323      NA
+    ## 324      NA
+    ## 325      NA
+    ## 326      NA
+    ## 327      NA
+    ## 328      NA
+    ## 329      NA
+    ## 330      NA
+    ## 331      NA
+    ## 332      NA
+    ## 333      NA
+    ## 334      NA
+    ## 335      NA
+    ## 336      NA
+    ## 337      NA
+    ## 338      NA
+    ## 339      NA
+    ## 340      NA
+    ## 341      NA
+    ## 342      NA
+    ## 343      NA
+    ## 344      NA
+    ## 345      NA
+    ## 346      NA
+    ## 347      NA
+    ## 348      NA
+    ## 349      NA
+    ## 350      NA
+    ## 351      NA
+    ## 352      NA
+    ## 353      NA
+    ## 354      NA
+    ## 355      NA
+    ## 356      NA
+    ## 357      NA
+    ## 358      NA
+    ## 359      NA
+    ## 360      NA
+    ## 361      NA
+    ## 362      NA
+    ## 363      NA
+    ## 364      NA
+    ## 365      NA
+    ## 366      NA
+    ## 367      NA
+    ## 368      NA
+    ## 369      NA
+    ## 370      NA
+    ## 371      NA
+    ## 372      NA
+    ## 373      NA
+    ## 374      NA
+    ## 375      NA
+    ## 376      NA
+    ## 377      NA
+    ## 378      NA
+    ## 379      NA
+    ## 380      NA
+    ## 381      NA
+    ## 382      NA
+    ## 383      NA
+    ## 384      NA
+    ## 385      NA
+    ## 386      NA
+    ## 387      NA
+    ## 388      NA
+    ## 389      NA
+    ## 390      NA
+    ## 391      NA
+    ## 392      NA
+    ## 393      NA
+    ## 394      NA
+    ## 395      NA
+    ## 396      NA
+    ## 397      NA
+    ## 398      NA
+    ## 399      NA
+    ## 400      NA
+    ## 401      NA
+    ## 402      NA
+    ## 403      NA
+    ## 404      NA
+    ## 405      NA
+    ## 406      NA
+    ## 407      NA
+    ## 408      NA
+    ## 409      NA
+    ## 410      NA
+    ## 411      NA
+    ## 412      NA
+    ## 413      NA
+    ## 414      NA
+    ## 415      NA
+    ## 416      NA
+    ## 417      NA
+    ## 418      NA
+    ## 419      NA
+    ## 420      NA
+    ## 421      NA
+    ## 422      NA
+    ## 423      NA
+    ## 424      NA
+    ## 425      NA
+    ## 426      NA
+    ## 427      NA
+    ## 428      NA
+    ## 429      NA
+    ## 430      NA
+    ## 431      NA
+    ## 432      NA
+    ## 433      NA
+    ## 434      NA
+    ## 435      NA
+    ## 436      NA
+    ## 437      NA
+    ## 438      NA
+    ## 439      NA
+    ## 440      NA
+    ## 441      NA
+    ## 442      NA
+    ## 443      NA
+    ## 444      NA
+    ## 445      NA
+    ## 446      NA
+    ## 447      NA
+    ## 448      NA
+    ## 449      NA
+    ## 450      NA
+    ## 451      NA
+    ## 452      NA
+    ## 453      NA
+    ## 454      NA
+    ## 455      NA
+    ## 456      NA
+    ## 457      NA
+    ## 458      NA
+    ## 459      NA
+    ## 460      NA
+    ## 461      NA
+    ## 462      NA
+    ## 463      NA
+    ## 464      NA
+    ## 465      NA
+    ## 466      NA
+    ## 467      NA
+
+``` r
 sum(transit_data$ada == "TRUE") # Count how many stations are ADA compliant
 ```
 
@@ -8092,11 +9505,29 @@ prcp_2017
 
 ``` r
 combined_prcp = bind_rows(prcp_2018, prcp_2017)  # combine precipitation data 
+    
 
-month_df = data.frame(month = 1:12, name = month.name, stringsAsFactors = FALSE)
- 
-  
-combined_prcp = inner_join(combined_prcp, month_df, by = "month")
+month_df = data.frame(
+  month = 1:12, name = month.name, stringsAsFactors = FALSE) # created month df
+month_df
+```
+
+    ##    month      name
+    ## 1      1   January
+    ## 2      2  February
+    ## 3      3     March
+    ## 4      4     April
+    ## 5      5       May
+    ## 6      6      June
+    ## 7      7      July
+    ## 8      8    August
+    ## 9      9 September
+    ## 10    10   October
+    ## 11    11  November
+    ## 12    12  December
+
+``` r
+combined_prcp = inner_join(combined_prcp, month_df, by = "month") # added month df 
 
 combined_prcp
 ```
@@ -8156,6 +9587,18 @@ wheel_data %>%
     ##   median
     ##    <int>
     ## 1      8
+
+``` r
+filter(wheel_data, year == 2018) %>%
+  summarize(sum(weight_tons))
+```
+
+    ## # A tibble: 1 x 1
+    ##   `sum(weight_tons)`
+    ##                <dbl>
+    ## 1               215.
+
+There were 19 and 285 observations for the precipitation data set and the trash wheel dataset, respectively.The total precipitation for 2017 was 32.93 and 23.5 for 2018. The median for precipitation for 2017 and 2018 were 2.145 and 2.39, respectively. Some key variables for the trash dataset include the total trash weight in 2018 -- 215.36 tons, median number of sports balls in 2017 -- 8 balls, and the mean of plastic bottles thrown out in 2018 -- 1264.21875 bottles.
 
 Problem 3
 ---------
