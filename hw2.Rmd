@@ -23,7 +23,7 @@ transit_data = read.csv("./hw2data/NYC_Transit_Subway_Entrance_And_Exit_Data.csv
   mutate(entry = ifelse(entry == "YES", TRUE, FALSE))  # convert character into logical
   
 transit_data
-dim(transit_data)
+dim(transit_data) # show rows and columns of data 
 
 
 distinct(transit_data, line, station_name) # Count number of distinct stations
@@ -53,33 +53,32 @@ library(readxl)
 wheel_data = read_excel("./hw2data/HealthyHarborWaterWheelTotals2018-7-28.xlsx", 
 	  sheet = 1, range = cell_cols("A:N")) %>%
 	  janitor::clean_names() %>% # import data and clean names
-    filter(!is.na(dumpster)) %>%
-    mutate(sports_balls = as.integer(round(sports_balls)))
+    filter(!is.na(dumpster)) %>% # filter out non dumpster specific data 
+    mutate(sports_balls = as.integer(round(sports_balls))) # rounding sports balls 
    
-	
 wheel_data
 
 prcp_2018 = read_excel("./hw2data/HealthyHarborWaterWheelTotals2018-7-28.xlsx",
-                       sheet = "2018 Precipitation", skip = 1 ) %>%
-  janitor::clean_names() %>%
-  na.omit() %>%
-  mutate(year = 2018)
+                       sheet = "2018 Precipitation", skip = 1 ) %>%  # import data
+  janitor::clean_names() %>%  # clean name
+  na.omit() %>% # remove na  
+  mutate(year = 2018) # put in year column
 
 prcp_2018
 
 prcp_2017 = read_excel("./hw2data/HealthyHarborWaterWheelTotals2018-7-28.xlsx",
-                       sheet = "2017 Precipitation", skip = 1 ) %>%
-  janitor::clean_names() %>%
-  na.omit() %>%
-  mutate(year = 2017)
+                       sheet = "2017 Precipitation", skip = 1 ) %>%  # import data 
+  janitor::clean_names() %>%   # clean name
+  na.omit() %>%  # remove na 
+  mutate(year = 2017)  # put in year column 
 
 prcp_2017
 
+combined_prcp = bind_rows(prcp_2018, prcp_2017)  # combine precipitation data 
+
 month_df = data.frame(month = 1:12, name = month.name, stringsAsFactors = FALSE)
-
-combined_prcp = bind_rows(prcp_2018, prcp_2017) 
+ 
   
-
 combined_prcp = inner_join(combined_prcp, month_df, by = "month")
 
 combined_prcp
@@ -105,13 +104,11 @@ devtools::install_github("p8105/p8105.datasets")
 
 library(p8105.datasets)
 
-data("brfss_smart2010")
-
-brfss_smart2010
+data("brfss_smart2010") # import data set 
 
 
 filtered_brfss = brfss_smart2010 %>%
-  janitor::clean_names() %>%
+  janitor::clean_names() %>% # clean names 
   filter(topic == "Overall Health") %>%
   select(-class, -topic, -question, -sample_size, -(confidence_limit_low:geo_location)) %>%
   spread(key = "response", value = "data_value") %>%  # making rows into columns
@@ -132,12 +129,13 @@ filtered_brfss %>%
   filter(year == 2002) %>% # filter by year 2002
   summarize(median = median(excellent, na.rm = TRUE)) # show median for excellent
 
-ggplot(filter(filtered_brfss, year == 2002 & !is.na(excellent)), aes(x = excellent)) + geom_histogram()
+ggplot(filter(filtered_brfss, year == 2002 & !is.na(excellent)), aes(x = excellent)) + geom_histogram() # create histogram
 
 filtered_brfss %>%
-  filter(locationdesc %in% c("NY - New York County", "NY - Queens County")) %>%
+  filter(locationdesc %in% 
+           c("NY - New York County", "NY - Queens County")) %>% # filter by location
   ggplot(aes(x = year, y = exc_very_prop, color = locationdesc)) +
-  geom_point()
+  geom_point() # create scatter plot
 
 ```
 

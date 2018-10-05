@@ -7516,7 +7516,7 @@ transit_data
     ## 1868     YES  TRUE
 
 ``` r
-dim(transit_data)
+dim(transit_data) # show rows and columns of data 
 ```
 
     ## [1] 1868   19
@@ -8019,10 +8019,9 @@ library(readxl)
 wheel_data = read_excel("./hw2data/HealthyHarborWaterWheelTotals2018-7-28.xlsx", 
       sheet = 1, range = cell_cols("A:N")) %>%
       janitor::clean_names() %>% # import data and clean names
-    filter(!is.na(dumpster)) %>%
-    mutate(sports_balls = as.integer(round(sports_balls)))
+    filter(!is.na(dumpster)) %>% # filter out non dumpster specific data 
+    mutate(sports_balls = as.integer(round(sports_balls))) # rounding sports balls 
    
-    
 wheel_data
 ```
 
@@ -8046,10 +8045,10 @@ wheel_data
 
 ``` r
 prcp_2018 = read_excel("./hw2data/HealthyHarborWaterWheelTotals2018-7-28.xlsx",
-                       sheet = "2018 Precipitation", skip = 1 ) %>%
-  janitor::clean_names() %>%
-  na.omit() %>%
-  mutate(year = 2018)
+                       sheet = "2018 Precipitation", skip = 1 ) %>%  # import data
+  janitor::clean_names() %>%  # clean name
+  na.omit() %>% # remove na  
+  mutate(year = 2018) # put in year column
 
 prcp_2018
 ```
@@ -8067,10 +8066,10 @@ prcp_2018
 
 ``` r
 prcp_2017 = read_excel("./hw2data/HealthyHarborWaterWheelTotals2018-7-28.xlsx",
-                       sheet = "2017 Precipitation", skip = 1 ) %>%
-  janitor::clean_names() %>%
-  na.omit() %>%
-  mutate(year = 2017)
+                       sheet = "2017 Precipitation", skip = 1 ) %>%  # import data 
+  janitor::clean_names() %>%   # clean name
+  na.omit() %>%  # remove na 
+  mutate(year = 2017)  # put in year column 
 
 prcp_2017
 ```
@@ -8092,11 +8091,11 @@ prcp_2017
     ## 12    12  0.94  2017
 
 ``` r
+combined_prcp = bind_rows(prcp_2018, prcp_2017)  # combine precipitation data 
+
 month_df = data.frame(month = 1:12, name = month.name, stringsAsFactors = FALSE)
-
-combined_prcp = bind_rows(prcp_2018, prcp_2017) 
+ 
   
-
 combined_prcp = inner_join(combined_prcp, month_df, by = "month")
 
 combined_prcp
@@ -8171,35 +8170,11 @@ devtools::install_github("p8105/p8105.datasets")
 ``` r
 library(p8105.datasets)
 
-data("brfss_smart2010")
+data("brfss_smart2010") # import data set 
 
-brfss_smart2010
-```
 
-    ## # A tibble: 134,203 x 23
-    ##     Year Locationabbr Locationdesc Class Topic Question Response
-    ##    <int> <chr>        <chr>        <chr> <chr> <chr>    <chr>   
-    ##  1  2010 AL           AL - Jeffer~ Heal~ Over~ How is ~ Excelle~
-    ##  2  2010 AL           AL - Jeffer~ Heal~ Over~ How is ~ Very go~
-    ##  3  2010 AL           AL - Jeffer~ Heal~ Over~ How is ~ Good    
-    ##  4  2010 AL           AL - Jeffer~ Heal~ Over~ How is ~ Fair    
-    ##  5  2010 AL           AL - Jeffer~ Heal~ Over~ How is ~ Poor    
-    ##  6  2010 AL           AL - Jeffer~ Heal~ Fair~ Health ~ Good or~
-    ##  7  2010 AL           AL - Jeffer~ Heal~ Fair~ Health ~ Fair or~
-    ##  8  2010 AL           AL - Jeffer~ Heal~ Heal~ Do you ~ Yes     
-    ##  9  2010 AL           AL - Jeffer~ Heal~ Heal~ Do you ~ No      
-    ## 10  2010 AL           AL - Jeffer~ Heal~ Unde~ Adults ~ Yes     
-    ## # ... with 134,193 more rows, and 16 more variables: Sample_Size <int>,
-    ## #   Data_value <dbl>, Confidence_limit_Low <dbl>,
-    ## #   Confidence_limit_High <dbl>, Display_order <int>,
-    ## #   Data_value_unit <chr>, Data_value_type <chr>,
-    ## #   Data_Value_Footnote_Symbol <chr>, Data_Value_Footnote <chr>,
-    ## #   DataSource <chr>, ClassId <chr>, TopicId <chr>, LocationID <chr>,
-    ## #   QuestionID <chr>, RESPID <chr>, GeoLocation <chr>
-
-``` r
 filtered_brfss = brfss_smart2010 %>%
-  janitor::clean_names() %>%
+  janitor::clean_names() %>% # clean names 
   filter(topic == "Overall Health") %>%
   select(-class, -topic, -question, -sample_size, -(confidence_limit_low:geo_location)) %>%
   spread(key = "response", value = "data_value") %>%  # making rows into columns
@@ -8290,7 +8265,7 @@ filtered_brfss %>%
     ## 1   23.6
 
 ``` r
-ggplot(filter(filtered_brfss, year == 2002 & !is.na(excellent)), aes(x = excellent)) + geom_histogram()
+ggplot(filter(filtered_brfss, year == 2002 & !is.na(excellent)), aes(x = excellent)) + geom_histogram() # create histogram
 ```
 
     ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
@@ -8299,9 +8274,10 @@ ggplot(filter(filtered_brfss, year == 2002 & !is.na(excellent)), aes(x = excelle
 
 ``` r
 filtered_brfss %>%
-  filter(locationdesc %in% c("NY - New York County", "NY - Queens County")) %>%
+  filter(locationdesc %in% 
+           c("NY - New York County", "NY - Queens County")) %>% # filter by location
   ggplot(aes(x = year, y = exc_very_prop, color = locationdesc)) +
-  geom_point()
+  geom_point() # create scatter plot
 ```
 
 ![](hw2_files/figure-markdown_github/unnamed-chunk-4-2.png)
