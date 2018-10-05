@@ -2,7 +2,7 @@
 title: "hw2"
 author: "Kee-Young Shin"
 date: "September 29, 2018"
-output: html_document
+output: github_document
 ---
 
 ## Problem 1
@@ -23,11 +23,10 @@ transit_data = read.csv("./hw2data/NYC_Transit_Subway_Entrance_And_Exit_Data.csv
   mutate(entry = ifelse(entry == "YES", TRUE, FALSE))  # convert character into logical
   
 transit_data
+dim(transit_data)
 
 
-
-
-x = distinct(transit_data, line, station_name) # Count number of distinct stations
+distinct(transit_data, line, station_name) # Count number of distinct stations
 
 y = distinct(transit_data, line, station_name, route1, route2, route3, route4, route5, route6, route7, route8, route9, route10, route11)
 
@@ -35,11 +34,12 @@ sum(transit_data$ada == "TRUE") # Count how many stations are ADA compliant
 
 transit_data %>%
 	filter(vending == "NO") %>%  # show only entrances without vending 
-  summarize(n = n(), yes = sum(entry == "TRUE")) %>% # find number of allowed entries
-  mutate(prop = yes / n) # find proportion 
+  summarize(total = n(), yes = sum(entry == "TRUE")) %>% # find number of allowed entries
+  mutate(prop = yes / total) # find proportion 
 
 	
-	  
+
+
 
 
 
@@ -50,14 +50,50 @@ transit_data %>%
 ```{r}
 library(readxl)
 
-
+wheel_data = read_excel("./hw2data/HealthyHarborWaterWheelTotals2018-7-28.xlsx", 
+	  sheet = 1, range = cell_cols("A:N")) %>%
+	  janitor::clean_names() %>% # import data and clean names
+    filter(!is.na(dumpster)) %>%
+    mutate(sports_balls = as.integer(round(sports_balls)))
+   
 	
-	wheel_data = read_excel(
-	  "./hw2data/HealthyHarborWaterWheelTotals2017-9-26.xlsx", sheet = 1) %>%
-	  janitor::clean_names() # import data and clean names
+wheel_data
 
-	
-	wheel_data
+prcp_2018 = read_excel("./hw2data/HealthyHarborWaterWheelTotals2018-7-28.xlsx",
+                       sheet = "2018 Precipitation", skip = 1 ) %>%
+  janitor::clean_names() %>%
+  na.omit() %>%
+  mutate(year = 2018)
+
+prcp_2018
+
+prcp_2017 = read_excel("./hw2data/HealthyHarborWaterWheelTotals2018-7-28.xlsx",
+                       sheet = "2017 Precipitation", skip = 1 ) %>%
+  janitor::clean_names() %>%
+  na.omit() %>%
+  mutate(year = 2017)
+
+prcp_2017
+
+month_df = data.frame(month = 1:12, name = month.name, stringsAsFactors = FALSE)
+
+combined_prcp = bind_rows(prcp_2018, prcp_2017) 
+  
+
+combined_prcp = inner_join(combined_prcp, month_df, by = "month")
+
+combined_prcp
+
+combined_prcp %>%
+  filter(year == 2018) %>%
+  summarize(total = sum(total))
+combined_prcp %>%
+  filter(year == 2017) %>%
+  summarize(total = sum(total))
+wheel_data %>%
+  filter(year == 2017) %>%
+  summarize(median = median(sports_balls))
+
 
 
 ```
@@ -96,7 +132,12 @@ filtered_brfss %>%
   filter(year == 2002) %>% # filter by year 2002
   summarize(median = median(excellent, na.rm = TRUE)) # show median for excellent
 
+ggplot(filter(filtered_brfss, year == 2002 & !is.na(excellent)), aes(x = excellent)) + geom_histogram()
 
+filtered_brfss %>%
+  filter(locationdesc %in% c("NY - New York County", "NY - Queens County")) %>%
+  ggplot(aes(x = year, y = exc_very_prop, color = locationdesc)) +
+  geom_point()
 
 ```
 
