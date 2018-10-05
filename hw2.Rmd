@@ -30,6 +30,7 @@ transit_data
 # the entrance. The new data set contained 684 rows and 19 columns. After the instructed  
 # tidying process, the dataset is relatively tidy, but there is still room for improvement. # For example, some stations are repeated. This was solved by using the unique function. 
 
+
 dim(transit_data) # show rows and columns of data
 
  
@@ -47,7 +48,21 @@ transit_data %>%
   mutate(prop = yes / total) # find proportion 
 
 
-	
+transit_data %>%
+  gather(key = route_number, value = route_name, route1:route11) # reshaping data set
+
+transit_data %>%
+  gather(key = route_number, value = route_name, route1:route11) %>%
+  filter(route_name == "A") %>% # filter by route A
+  distinct(line, station_name) # show distinct lines 
+# There are 60 distinct lines that serve the A train.
+
+transit_data %>%
+  gather(key = route_number, value = route_name, route1:route11) %>%
+  filter(route_name == "A", ada == "TRUE") %>% # filter by route A and ADA compliance 
+  distinct(line, station_name) # show distinct lines 
+# Of the stations that serve the A train, 17 are ADA compliant. 
+
 
 ```
 
