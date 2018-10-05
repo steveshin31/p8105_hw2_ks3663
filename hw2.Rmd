@@ -28,7 +28,7 @@ transit_data
 # its location, its various routes, its entrance type, whether it has vending, whether it
 # allows entry, and whether or not it is ADA compliant. I cleaned the dataset by converting # the names into snake case and taking out superfluous columns such as the coordinates for 
 # the entrance. The new data set contained 684 rows and 19 columns. After the instructed  
-# tidying process, the dataset is relatively tidy, but there is still room for improvement. # For example, some stations are repeated. This was solved by using the unique function. 
+# tidying process, the dataset is relatively tidy, but there is still room for improvement. # After selecing for certain columns, some rows were repeated. This was solved by using the unique function. 
 
 
 dim(transit_data) # show rows and columns of data
@@ -79,42 +79,37 @@ wheel_data = read_excel("./hw2data/HealthyHarborWaterWheelTotals2018-7-28.xlsx",
    
 wheel_data
 
-prcp_2018 = read_excel("./hw2data/HealthyHarborWaterWheelTotals2018-7-28.xlsx",
-                       sheet = "2018 Precipitation", skip = 1 ) %>%  # import data
+prcp_2017 = read_excel("./hw2data/HealthyHarborWaterWheelTotals2018-7-28.xlsx",
+                       sheet = "2017 Precipitation", skip = 1 ) %>%  # import data
   janitor::clean_names() %>%  # clean name
   na.omit() %>% # remove na  
-  mutate(year = 2018) # put in year column
-
-prcp_2018
-
-prcp_2017 = read_excel("./hw2data/HealthyHarborWaterWheelTotals2018-7-28.xlsx",
-                       sheet = "2017 Precipitation", skip = 1 ) %>%  # import data 
-  janitor::clean_names() %>%   # clean name
-  na.omit() %>%  # remove na 
-  mutate(year = 2017)  # put in year column 
+  mutate(year = 2017) # put in year column
 
 prcp_2017
 
- 
-combined_prcp = bind_rows(prcp_2018, prcp_2017)  # combine precipitation data 
-    
+prcp_2016 = read_excel("./hw2data/HealthyHarborWaterWheelTotals2018-7-28.xlsx",
+                       sheet = "2016 Precipitation", skip = 1 ) %>%  # import data 
+  janitor::clean_names() %>%   # clean name
+  na.omit() %>%  # remove na 
+  mutate(year = 2016)  # put in year column 
 
-month_df = data.frame(
-  month = 1:12, name = month.name, stringsAsFactors = FALSE) # created month df
-month_df
-  
-combined_prcp = inner_join(combined_prcp, month_df, by = "month") # added month df 
+prcp_2016
+
+ 
+combined_prcp = bind_rows(prcp_2017, prcp_2016) %>%  # combine precipitation data 
+    mutate(month = month.name[month]) # convert to character
+
 
 combined_prcp
 
 combined_prcp %>%
-  filter(year == 2018) %>%
+  filter(year == 2017) %>%
   summarize(total = sum(total))
 combined_prcp %>%
-  filter(year == 2017) %>%
+  filter(year == 2016) %>%
   summarize(total = sum(total))
 wheel_data %>%
-  filter(year == 2017) %>%
+  filter(year == 2016) %>%
   summarize(median = median(sports_balls))
 
 
@@ -122,7 +117,7 @@ filter(wheel_data, year == 2018) %>%
   summarize(sum(weight_tons))
 
 ```
-There were `r nrow(combined_prcp)` and `r nrow(wheel_data)` observations for the precipitation data set and the trash wheel dataset, respectively. The total precipitation for 2017 was `r sum(prcp_2017$total)` and `r sum(prcp_2018$total)` for 2018. The median for precipitation for 2017 and 2018 were `r median(prcp_2017$total)` and `r median(prcp_2018$total)`, respectively. Some key variables for the trash dataset include the total trash weight in 2018 -- `r filter(wheel_data, year == 2018) %>% summarize(sum(weight_tons))` tons, median number of sports balls in 2017 -- `r wheel_data %>% filter(year == 2017) %>% summarize(median = median(sports_balls))` balls, and the mean of plastic bottles thrown out in 2018 -- `r filter(wheel_data, year == 2018) %>% summarize(mean(plastic_bottles))` bottles. 
+There were `r nrow(combined_prcp)` and `r nrow(wheel_data)` observations for the precipitation data set and the trash wheel dataset, respectively. The total precipitation for 2017 was `r sum(prcp_2017$total)` and `r sum(prcp_2018$total)` for 2018. The median for precipitation for 2017 and 2018 were `r median(prcp_2017$total)` and `r median(prcp_2018$total)`, respectively. Some key variables for the trash dataset include the total trash weight in 2018 -- `r filter(wheel_data, year == 2018) %>% summarize(sum(weight_tons))` tons, median number of sports balls in 2017 -- `r wheel_data %>% filter(year == 2017) %>% summarize(median = median(sports_balls))` balls, and the mean of plastic bottles thrown out in 2018 -- `r filter(wheel_data, year == 2018) %>% summarize(mean(plastic_bottles))` bottles. Compare: aka precipitation of 2017 was smaller or larger
 
 
 ## Problem 3
@@ -140,8 +135,8 @@ filtered_brfss = brfss_smart2010 %>%
   select(-class, -topic, -question, -sample_size, -(confidence_limit_low:geo_location)) %>%
   spread(key = "response", value = "data_value") %>%  # making rows into columns
   janitor::clean_names() %>% # clean new columns 
-  mutate(proportion_yv = excellent + very_good) # create proportion column
-
+  mutate(proportion_yv = excellent + very_good) %>% # create proportion column
+  
 filtered_brfss  
 
 distinct(filtered_brfss, locationdesc) # distinct locations
@@ -155,7 +150,6 @@ filtered_brfss %>%
   arrange(-n) # put the count in descending order to show which state was observed most 
 # New Jersey was observed most with 146 counts. 
 
-
 filtered_brfss %>%
   filter(year == 2002) %>% # filter by year 2002
   summarize(median = median(excellent, na.rm = TRUE)) # show median for excellent
@@ -163,7 +157,6 @@ filtered_brfss %>%
 filtered_brfss %>%
   filter(year == 2002) %>% # filter by year 
   ggplot(aes(x = excellent)) + geom_histogram() # create histogram
-
 
 filtered_brfss %>%
   filter(locationdesc %in% 
