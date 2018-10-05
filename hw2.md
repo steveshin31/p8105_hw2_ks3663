@@ -1,4 +1,4 @@
-hw2
+p8105\_hw2\_ks3663
 ================
 Kee-Young Shin
 September 29, 2018
@@ -36,6 +36,12 @@ transit_data = read.csv("./hw2data/NYC_Transit_Subway_Entrance_And_Exit_Data.csv
   mutate(entry = ifelse(entry == "YES", TRUE, FALSE)) %>% # convert character into logical
   unique()
 
+dim(transit_data) # show rows and columns of data
+```
+
+    ## [1] 684  19
+
+``` r
 transit_data
 ```
 
@@ -2780,18 +2786,8 @@ transit_data
     ## 1867     YES  TRUE
     ## 1868     YES  TRUE
 
-``` r
-# The dataset contains information regarding NYC subway stations including, the line name,
-# its location, its various routes, its entrance type, whether it has vending, whether it
-# allows entry, and whether or not it is ADA compliant. I cleaned the dataset by converting # the names into snake case and taking out superfluous columns such as the coordinates for 
-# the entrance. The new data set contained 684 rows and 19 columns. After the instructed  
-# tidying process, the dataset is relatively tidy, but there is still room for improvement. # For example, some stations are repeated. This was solved by using the unique function. 
-
-
-dim(transit_data) # show rows and columns of data
-```
-
-    ## [1] 684  19
+The dataset contains information regarding NYC subway stations including, the line name, its location, its various routes, its entrance type, whether it has vending, whether it allows entry, and whether or not it is ADA compliant. I cleaned the dataset by converting the names into snake case and taking out superfluous columns such as the coordinates for the entrance. The new data set contained 684 rows and 19 columns. After the instructed
+tidying process, the dataset is relatively tidy, but there is still room for improvement. After selecing for certain columns, there were some rows with the same data. This was solved by using the unique function.
 
 ``` r
 transit_data %>%
@@ -26009,32 +26005,11 @@ wheel_data
     ## #   homes_powered <dbl>
 
 ``` r
-prcp_2018 = read_excel("./hw2data/HealthyHarborWaterWheelTotals2018-7-28.xlsx",
-                       sheet = "2018 Precipitation", skip = 1 ) %>%  # import data
+prcp_2017 = read_excel("./hw2data/HealthyHarborWaterWheelTotals2018-7-28.xlsx",
+                       sheet = "2017 Precipitation", skip = 1 ) %>%  # import data
   janitor::clean_names() %>%  # clean name
   na.omit() %>% # remove na  
-  mutate(year = 2018) # put in year column
-
-prcp_2018
-```
-
-    ## # A tibble: 7 x 3
-    ##   month total  year
-    ##   <dbl> <dbl> <dbl>
-    ## 1     1  0.96  2018
-    ## 2     2  5.3   2018
-    ## 3     3  2.18  2018
-    ## 4     4  3.2   2018
-    ## 5     5  9.27  2018
-    ## 6     6  0.2   2018
-    ## 7     7  2.39  2018
-
-``` r
-prcp_2017 = read_excel("./hw2data/HealthyHarborWaterWheelTotals2018-7-28.xlsx",
-                       sheet = "2017 Precipitation", skip = 1 ) %>%  # import data 
-  janitor::clean_names() %>%   # clean name
-  na.omit() %>%  # remove na 
-  mutate(year = 2017)  # put in year column 
+  mutate(year = 2017) # put in year column
 
 prcp_2017
 ```
@@ -26056,72 +26031,57 @@ prcp_2017
     ## 12    12  0.94  2017
 
 ``` r
-combined_prcp = bind_rows(prcp_2018, prcp_2017)  # combine precipitation data 
-    
+prcp_2016 = read_excel("./hw2data/HealthyHarborWaterWheelTotals2018-7-28.xlsx",
+                       sheet = "2016 Precipitation", skip = 1 ) %>%  # import data 
+  janitor::clean_names() %>%   # clean name
+  na.omit() %>%  # remove na 
+  mutate(year = 2016)  # put in year column 
 
-month_df = data.frame(
-  month = 1:12, name = month.name, stringsAsFactors = FALSE) # created month df
-month_df
+prcp_2016
 ```
 
-    ##    month      name
-    ## 1      1   January
-    ## 2      2  February
-    ## 3      3     March
-    ## 4      4     April
-    ## 5      5       May
-    ## 6      6      June
-    ## 7      7      July
-    ## 8      8    August
-    ## 9      9 September
-    ## 10    10   October
-    ## 11    11  November
-    ## 12    12  December
+    ## # A tibble: 12 x 3
+    ##    month total  year
+    ##    <dbl> <dbl> <dbl>
+    ##  1     1  3.23  2016
+    ##  2     2  5.32  2016
+    ##  3     3  2.24  2016
+    ##  4     4  1.78  2016
+    ##  5     5  5.19  2016
+    ##  6     6  3.2   2016
+    ##  7     7  6.09  2016
+    ##  8     8  3.96  2016
+    ##  9     9  4.53  2016
+    ## 10    10  0.62  2016
+    ## 11    11  1.47  2016
+    ## 12    12  2.32  2016
 
 ``` r
-combined_prcp = inner_join(combined_prcp, month_df, by = "month") # added month df 
+combined_prcp = bind_rows(prcp_2017, prcp_2016) %>%  # combine precipitation data 
+    mutate(month = month.name[month]) # convert to character
 
 combined_prcp
 ```
 
-    ## # A tibble: 19 x 4
-    ##    month total  year name     
-    ##    <dbl> <dbl> <dbl> <chr>    
-    ##  1     1  0.96  2018 January  
-    ##  2     2  5.3   2018 February 
-    ##  3     3  2.18  2018 March    
-    ##  4     4  3.2   2018 April    
-    ##  5     5  9.27  2018 May      
-    ##  6     6  0.2   2018 June     
-    ##  7     7  2.39  2018 July     
-    ##  8     1  2.34  2017 January  
-    ##  9     2  1.46  2017 February 
-    ## 10     3  3.57  2017 March    
-    ## 11     4  3.99  2017 April    
-    ## 12     5  5.64  2017 May      
-    ## 13     6  1.4   2017 June     
-    ## 14     7  7.09  2017 July     
-    ## 15     8  4.44  2017 August   
-    ## 16     9  1.95  2017 September
-    ## 17    10  0     2017 October  
-    ## 18    11  0.11  2017 November 
-    ## 19    12  0.94  2017 December
-
-``` r
-combined_prcp %>%
-  filter(year == 2018) %>%
-  summarize(total = sum(total))
-```
-
-    ## # A tibble: 1 x 1
-    ##   total
-    ##   <dbl>
-    ## 1  23.5
+    ## # A tibble: 24 x 3
+    ##    month     total  year
+    ##    <chr>     <dbl> <dbl>
+    ##  1 January    2.34  2017
+    ##  2 February   1.46  2017
+    ##  3 March      3.57  2017
+    ##  4 April      3.99  2017
+    ##  5 May        5.64  2017
+    ##  6 June       1.4   2017
+    ##  7 July       7.09  2017
+    ##  8 August     4.44  2017
+    ##  9 September  1.95  2017
+    ## 10 October    0     2017
+    ## # ... with 14 more rows
 
 ``` r
 combined_prcp %>%
   filter(year == 2017) %>%
-  summarize(total = sum(total))
+  summarize(total = sum(total)) # show total precipitation for 2017
 ```
 
     ## # A tibble: 1 x 1
@@ -26130,27 +26090,33 @@ combined_prcp %>%
     ## 1  32.9
 
 ``` r
+# The total precipitation for 2017 was 32.93. 
+combined_prcp %>%
+  filter(year == 2016) %>%
+  summarize(total = sum(total)) # show total precipitation for 2016
+```
+
+    ## # A tibble: 1 x 1
+    ##   total
+    ##   <dbl>
+    ## 1  40.0
+
+``` r
 wheel_data %>%
-  filter(year == 2017) %>%
-  summarize(median = median(sports_balls))
+  filter(year == 2016) %>%
+  summarize(median = median(sports_balls)) # show median for sports balls
 ```
 
     ## # A tibble: 1 x 1
     ##   median
     ##    <int>
-    ## 1      8
+    ## 1     26
 
 ``` r
-filter(wheel_data, year == 2018) %>%
-  summarize(sum(weight_tons))
+# The median number of sports balls in 2016 was 26. 
 ```
 
-    ## # A tibble: 1 x 1
-    ##   `sum(weight_tons)`
-    ##                <dbl>
-    ## 1               215.
-
-There were 19 and 285 observations for the precipitation data set and the trash wheel dataset, respectively. The total precipitation for 2017 was 32.93 and 23.5 for 2018. The median for precipitation for 2017 and 2018 were 2.145 and 2.39, respectively. Some key variables for the trash dataset include the total trash weight in 2018 -- 215.36 tons, median number of sports balls in 2017 -- 8 balls, and the mean of plastic bottles thrown out in 2018 -- 1264.21875 bottles.
+There were 24 and 285 observations for the precipitation data set and the trash wheel dataset, respectively. There was overall more precipitation in 2016 than 2017 with total precipitation of 39.95 and 32.93, respectively. Some key variables for the trash dataset include the total trash weights in 2017 and 2016 which were 174.84 and 164.59 tons, respectively. The collection of more trash in 2017 compared to 2016 resulted in more homes being powered in 2017 than 2016 with total 2914 and 2743.1666667 homes being powered, respectively. Interestingly, even though in 2016 there was more total precipitation compared to in 2017, there was more trash (in terms of weight) collected during 2017 than during 2016.
 
 Problem 3
 ---------
@@ -26170,12 +26136,12 @@ data("brfss_smart2010") # import data set
 
 filtered_brfss = brfss_smart2010 %>%
   janitor::clean_names() %>% # clean names 
-  filter(topic == "Overall Health") %>%
+  filter(topic == "Overall Health") %>% # focus on Overall Health 
   select(-class, -topic, -question, -sample_size, -(confidence_limit_low:geo_location)) %>%
   spread(key = "response", value = "data_value") %>%  # making rows into columns
   janitor::clean_names() %>% # clean new columns 
-  mutate(proportion_yv = excellent + very_good) # create proportion column
-
+  mutate(proportion_ev = excellent + very_good)  # create proportion column
+  
 filtered_brfss  
 ```
 
@@ -26192,7 +26158,7 @@ filtered_brfss
     ##  8  2002 CO           CO - Arapah~      25.5   8    29.3   2.1      35.2
     ##  9  2002 CO           CO - Denver~      22.2  11.1  36.6   3        27.1
     ## 10  2002 CO           CO - Jeffer~      23.4  11.4  26.3   2.4      36.6
-    ## # ... with 2,115 more rows, and 1 more variable: proportion_yv <dbl>
+    ## # ... with 2,115 more rows, and 1 more variable: proportion_ev <dbl>
 
 ``` r
 distinct(filtered_brfss, locationdesc) # distinct locations
@@ -26237,7 +26203,7 @@ distinct(filtered_brfss, locationabbr) # distinct states
 # All states are represented in addition to D.C.
 
 filtered_brfss %>%
-  group_by(locationabbr) %>%
+  group_by(locationabbr) %>% # group by location
   summarize(n = n()) %>% # take count of number of state
   arrange(-n) # put the count in descending order to show which state was observed most 
 ```
@@ -26260,7 +26226,6 @@ filtered_brfss %>%
 ``` r
 # New Jersey was observed most with 146 counts. 
 
-
 filtered_brfss %>%
   filter(year == 2002) %>% # filter by year 2002
   summarize(median = median(excellent, na.rm = TRUE)) # show median for excellent
@@ -26281,14 +26246,14 @@ filtered_brfss %>%
 
     ## Warning: Removed 2 rows containing non-finite values (stat_bin).
 
-![](hw2_files/figure-markdown_github/unnamed-chunk-4-1.png)
+![](hw2_files/figure-markdown_github/unnamed-chunk-5-1.png)
 
 ``` r
 filtered_brfss %>%
   filter(locationdesc %in% 
            c("NY - New York County", "NY - Queens County")) %>% # filter by location
-  ggplot(aes(x = year, y = proportion_yv, color = locationdesc)) +
+  ggplot(aes(x = year, y = proportion_ev, color = locationdesc)) +
   geom_point() # create scatter plot
 ```
 
-![](hw2_files/figure-markdown_github/unnamed-chunk-4-2.png)
+![](hw2_files/figure-markdown_github/unnamed-chunk-5-2.png)

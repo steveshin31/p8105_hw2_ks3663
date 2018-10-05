@@ -1,5 +1,5 @@
 ---
-title: "hw2"
+title: "p8105_hw2_ks3663"
 author: "Kee-Young Shin"
 date: "September 29, 2018"
 output: github_document
@@ -23,17 +23,18 @@ transit_data = read.csv("./hw2data/NYC_Transit_Subway_Entrance_And_Exit_Data.csv
   mutate(entry = ifelse(entry == "YES", TRUE, FALSE)) %>% # convert character into logical
   unique()
 
-transit_data
-# The dataset contains information regarding NYC subway stations including, the line name,
-# its location, its various routes, its entrance type, whether it has vending, whether it
-# allows entry, and whether or not it is ADA compliant. I cleaned the dataset by converting # the names into snake case and taking out superfluous columns such as the coordinates for 
-# the entrance. The new data set contained 684 rows and 19 columns. After the instructed  
-# tidying process, the dataset is relatively tidy, but there is still room for improvement. # After selecing for certain columns, some rows were repeated. This was solved by using the unique function. 
-
-
 dim(transit_data) # show rows and columns of data
 
- 
+transit_data
+
+```
+The dataset contains information regarding NYC subway stations including, the line name,
+its location, its various routes, its entrance type, whether it has vending, whether it
+allows entry, and whether or not it is ADA compliant. I cleaned the dataset by converting  the names into snake case and taking out superfluous columns such as the coordinates for 
+the entrance. The new data set contained 684 rows and 19 columns. After the instructed  
+tidying process, the dataset is relatively tidy, but there is still room for improvement.  After selecing for certain columns, there were some rows with the same data. This was solved by using the unique function. 
+
+```{r}
 transit_data %>%
   distinct(line, station_name)  # Count number of distinct stations
  
@@ -41,12 +42,10 @@ transit_data %>%
   distinct(line, station_name, ada) %>%
   summarize(sum(ada == "TRUE")) # Count how many stations are ADA compliant
 
-
 transit_data %>%
 	filter(vending == "NO") %>%  # show only entrances without vending 
   summarize(total = n(), yes = sum(entry == "TRUE")) %>% # find number of allowed entries
   mutate(prop = yes / total) # find proportion 
-
 
 transit_data %>%
   gather(key = route_number, value = route_name, route1:route11) # reshaping data set
@@ -99,25 +98,24 @@ prcp_2016
 combined_prcp = bind_rows(prcp_2017, prcp_2016) %>%  # combine precipitation data 
     mutate(month = month.name[month]) # convert to character
 
-
 combined_prcp
 
 combined_prcp %>%
   filter(year == 2017) %>%
-  summarize(total = sum(total))
+  summarize(total = sum(total)) # show total precipitation for 2017
+# The total precipitation for 2017 was 32.93. 
 combined_prcp %>%
   filter(year == 2016) %>%
-  summarize(total = sum(total))
+  summarize(total = sum(total)) # show total precipitation for 2016
 wheel_data %>%
   filter(year == 2016) %>%
-  summarize(median = median(sports_balls))
+  summarize(median = median(sports_balls)) # show median for sports balls
+# The median number of sports balls in 2016 was 26. 
 
-
-filter(wheel_data, year == 2018) %>%
-  summarize(sum(weight_tons))
 
 ```
-There were `r nrow(combined_prcp)` and `r nrow(wheel_data)` observations for the precipitation data set and the trash wheel dataset, respectively. The total precipitation for 2017 was `r sum(prcp_2017$total)` and `r sum(prcp_2018$total)` for 2018. The median for precipitation for 2017 and 2018 were `r median(prcp_2017$total)` and `r median(prcp_2018$total)`, respectively. Some key variables for the trash dataset include the total trash weight in 2018 -- `r filter(wheel_data, year == 2018) %>% summarize(sum(weight_tons))` tons, median number of sports balls in 2017 -- `r wheel_data %>% filter(year == 2017) %>% summarize(median = median(sports_balls))` balls, and the mean of plastic bottles thrown out in 2018 -- `r filter(wheel_data, year == 2018) %>% summarize(mean(plastic_bottles))` bottles. Compare: aka precipitation of 2017 was smaller or larger
+There were `r nrow(combined_prcp)` and `r nrow(wheel_data)` observations for the precipitation data set and the trash wheel dataset, respectively. There was overall more precipitation in 2016 than 2017 with total precipitation of `r sum(prcp_2016$total)` and `r sum(prcp_2017$total)`, respectively. Some key variables for the trash dataset include the total trash weights in 2017 and 2016 which were `r filter(wheel_data, year == 2017) %>% summarize(sum(weight_tons))` and `r filter(wheel_data, year == 2016) %>% summarize(sum(weight_tons))` tons, respectively. The collection of more trash in 2017 compared to 2016 resulted in more homes being powered in 2017 than 2016 with total `r filter(wheel_data, year == 2017) %>% summarize(sum(homes_powered))` and `r filter(wheel_data, year == 2016) %>% summarize(sum(homes_powered))` homes being powered, respectively. Interestingly, even though in 2016 there was more total precipitation compared to in 2017, there was more trash (in terms of weight) collected during 2017 than during 2016. 
+
 
 
 ## Problem 3
@@ -131,11 +129,11 @@ data("brfss_smart2010") # import data set
 
 filtered_brfss = brfss_smart2010 %>%
   janitor::clean_names() %>% # clean names 
-  filter(topic == "Overall Health") %>%
+  filter(topic == "Overall Health") %>% # focus on Overall Health 
   select(-class, -topic, -question, -sample_size, -(confidence_limit_low:geo_location)) %>%
   spread(key = "response", value = "data_value") %>%  # making rows into columns
   janitor::clean_names() %>% # clean new columns 
-  mutate(proportion_yv = excellent + very_good) %>% # create proportion column
+  mutate(proportion_ev = excellent + very_good)  # create proportion column
   
 filtered_brfss  
 
@@ -145,7 +143,7 @@ distinct(filtered_brfss, locationabbr) # distinct states
 # All states are represented in addition to D.C.
 
 filtered_brfss %>%
-  group_by(locationabbr) %>%
+  group_by(locationabbr) %>% # group by location
   summarize(n = n()) %>% # take count of number of state
   arrange(-n) # put the count in descending order to show which state was observed most 
 # New Jersey was observed most with 146 counts. 
@@ -161,7 +159,7 @@ filtered_brfss %>%
 filtered_brfss %>%
   filter(locationdesc %in% 
            c("NY - New York County", "NY - Queens County")) %>% # filter by location
-  ggplot(aes(x = year, y = proportion_yv, color = locationdesc)) +
+  ggplot(aes(x = year, y = proportion_ev, color = locationdesc)) +
   geom_point() # create scatter plot
 
 
